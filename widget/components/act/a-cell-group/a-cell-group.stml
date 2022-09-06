@@ -1,0 +1,55 @@
+<script>
+
+import {extendsClassStyle, mixedClass, superNode} from "../utils";
+
+export default {
+  name: "a-cell-group",
+  install() {
+    this.render = props => {
+      // 最后一个cell 标记为last 方便实现last伪元素
+      if (props.children.length) {
+        let last = props.children[props.children.length - 1];
+        if (last.attributes) {
+          last.attributes.__last = true;
+        } else {
+          last.attributes = {__last: true};
+        }
+      }
+
+      const {h} = apivm;
+      const renderGroup = h(
+          'view',
+          {class: mixedClass('a-cell-group', {['a-cell-group--round']: props.round})},
+          props.children
+      );
+      if (props.title) {
+        // TODO 暂不支持空节点编译
+        return h('view', false, h('text', {class: 'a-cell-group__title'}, props.title), renderGroup);
+      }
+      return renderGroup;
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-cell-group {
+  background-color: #FFF;
+  border:0.5px solid #ebedf0;
+}
+
+.a-cell-group--round {
+  margin: 12px 12px 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.a-cell-group__title {
+  padding: 16px 16px 8px;
+  color: #969799;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+</style>

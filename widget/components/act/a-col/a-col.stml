@@ -1,0 +1,27 @@
+<script>
+import {mixedClass} from "../utils";
+
+export default {
+  name: "a-col",
+  install() {
+    this.render = props => {
+      const span = props.span / 24 * 100 + '%';
+      const offset = props.offset / 24 * 100 + '%';
+
+      const {h, extractClass} = apivm;
+
+      return h('view', {
+        ...extractClass(props, `a-col a-col--${props.span}`),
+        style: `flex: 0 0 ${span};max-width: ${span};margin-left: ${offset};${props.style || ''}`
+      }, props.children)
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-col {
+  box-sizing: border-box;
+}
+</style>

@@ -1,0 +1,4 @@
+.idea
+widget/.*
+widget/out-mp
+/widget/components/act/node_modules/

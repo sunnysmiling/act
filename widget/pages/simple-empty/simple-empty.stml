@@ -1,0 +1,109 @@
+<template name="simple-empty">
+  <view class="page">
+    <a-nav-bar title="simple-empty" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="simple">
+        <text class="simple-title">
+          基础用法
+        </text>
+
+        <a-empty description="描述文字"/>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">
+          通用错误
+        </text>
+
+        <a-empty image="error" description="描述文字"/>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">
+          网络错误
+        </text>
+
+        <a-empty image="network" description="描述文字"/>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          搜索提示
+        </text>
+        <a-empty image="search" description="描述文字"/>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          自定义图片
+        </text>
+        <a-empty class="custom-image"
+                 image="https://icon.yangyongan.com/?name=warning&size=64&scale=2&color=_ddd"
+                 image-size="88"
+                 description="描述文字"/>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          底部插槽
+        </text>
+        <a-empty description="描述文字">
+          <a-button round type="danger" class="bottom-button">按钮测试</a-button>
+        </a-empty>
+
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import AEmpty from "../../components/act/a-empty";
+import AButton from "../../components/act/a-button";
+
+export default {
+  name: "simple-empty",
+  components: {AButton, AEmpty, ANavBar}
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+
+.todo {
+  background: #f1e9d5;
+}
+
+
+.bottom-button {
+  width: 160px;
+  height: 40px;
+}
+</style>

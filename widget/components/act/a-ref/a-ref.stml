@@ -1,0 +1,17 @@
+<script>
+export default {
+  name: "a-ref",
+  install() {
+    this.render = props => {
+      return props.children[0];
+    }
+  },
+  installed() {
+    if (this._host.$refs) {
+      this._host.$refs[this.props.name] = this._child[0];
+    } else {
+      this._host.$refs = {[this.props.name]: this._child[0]};
+    }
+  }
+}
+</script>

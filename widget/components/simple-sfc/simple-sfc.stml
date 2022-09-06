@@ -1,0 +1,22 @@
+<template>
+  <view class="simple-sfc">
+    <text class="simple-sfc__text">Hello SFC</text>
+  </view>
+</template>
+
+<script>
+
+export default {
+  name: "simple-sfc"
+}
+</script>
+
+<style scoped>
+.simple-sfc {
+
+}
+
+.simple-sfc__text {
+
+}
+</style>

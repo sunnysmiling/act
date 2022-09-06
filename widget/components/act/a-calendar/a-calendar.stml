@@ -1,0 +1,385 @@
+<script>
+
+
+import {compareDay, dateFormat, syncModel} from "../utils";
+import APopup from '../a-popup';
+import Toast from "../a-toast";
+
+export default {
+  name: "a-calendar",
+  data() {
+    return {
+      selectDay: [],
+      subTitle: ''
+    }
+  },
+  compute: {
+    confirmBtnAble() {
+      if (this.props.type === 'range') {
+        return this.selectDay.length === 2;
+      }
+      return this.selectDay.length > 0;
+    }
+  },
+  install() {
+
+    syncModel.call(this);
+
+    this.render = props => {
+
+      const {h} = apivm;
+      const now = new Date();
+
+
+      if (!props.type) {
+        props.type = 'single';
+      }
+
+      if (!props['min-date']) {
+        props['min-date'] = new Date(dateFormat('Y/mm/dd 00:00:00', new Date(now.setMonth(now.getMonth()))));
+      }
+
+
+      if (!props['max-date']) {
+        props['max-date'] = new Date(new Date(props['min-date']).setMonth(props['min-date'].getMonth() + 3));
+      }
+
+      this.hideConfirmBtn = props['show-confirm'] === false;
+
+      (!this.data.subTitle) && (this.data.subTitle = dateFormat('Y-mm', props['min-date']));
+
+
+      this.monthDiff = (props['max-date'].getFullYear() - props['min-date'].getFullYear()) * 12 + (props['max-date'].getMonth() - props['min-date'].getMonth());
+
+      const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+      const renderHeader = h('view', {
+            class: 'a-calendar__header',
+            onClick: ev => ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true
+          },
+          props.title !== false && h('text', {class: 'a-calendar__title'}, props.title || '日期选择'),
+          h('text', {class: 'a-calendar__subtitle'}, this.data.subTitle),
+          h('view', {class: 'a-calendar__weekdays'},
+              dayNames.map(name => h('text', {class: 'a-calendar__weekday'}, name))
+          )
+      )
+
+      const renderFooter = this.hideConfirmBtn
+          ? h('safe-area', {class: 'a-calendar__footer'})
+          :
+          this.confirmBtnAble() ? h('safe-area', {
+                class: 'a-calendar__footer safe-area',
+                onClick: _ => this.onConfirm(_)
+              }, h('text', {class: `a-calendar__btn a-calendar__btn--able`}, props['confirm-text'] || '确定')
+          ) : h('safe-area', {
+                class: 'a-calendar__footer safe-area',
+                onClick: ev => ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true
+              }, h('text', {class: `a-calendar__btn  a-calendar__btn--disabled `}, props['confirm-disabled-text'] || '确定')
+          )
+
+      return h(APopup, {
+            ...props,
+            class: `a-calendar ${props.class || ''}`,
+            style: `${props.style}`, position: 'bottom',
+            ['$show']: props.$show,
+            closeable: true,
+          }, renderHeader, this.renderBody(), renderFooter
+      );
+
+    }
+  },
+  renderBody() {
+    const {h} = apivm;
+
+    const baseTime = this.props['min-date'].setDate(1);
+
+    let offset = 0;
+
+    this.monthList = Array.from({length: this.monthDiff + 1})
+        .map((_, index) => {
+          const month = new Date(new Date(baseTime).setMonth(this.props['min-date'].getMonth() + index));
+          const dayOffset = new Date(month.getFullYear(), month.getMonth(), 1).getDay();
+          const dayNumber = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+          const height = Math.ceil((dayOffset + dayNumber) / 7) * 64; // 64 是单元格的高度
+          const heightOffset = offset += height;
+          return {month, dayOffset, dayNumber, heightOffset, height};
+        });
+
+
+    return h('scroll-view', {
+          class: 'a-calendar__body',
+          scroll: 'y',
+          scrollY: true,
+          'scroll-y': true,
+          onScroll: ({detail: {scrollTop = 0}}) => {
+            let currentIndex = 0;
+            for (let i = 0; i < this.monthList.length; i++) {
+              if (scrollTop >= this.monthList[i].heightOffset) {
+                currentIndex = i + 1;
+              }
+            }
+            this.data.subTitle = dateFormat('Y-mm', this.monthList[currentIndex].month);
+          }
+        },
+        ...this.monthList.map(monthInfo => {
+
+              return h('view', {class: 'a-calendar__month'},
+                  h('text', {
+                    class: 'a-calendar__month-mark',
+                    style: `height:${monthInfo.height}px;line-height:${monthInfo.height}px;`
+                  }, monthInfo.month.getMonth() + 1),
+                  this.renderDays(monthInfo)
+              )
+            }
+        )
+    )
+
+  },
+  renderDays(monthInfo) {
+
+    const {h} = apivm;
+    return h('view', {class: 'a-calendar__days'},
+        ...Array.from({length: monthInfo.dayNumber}).map(
+            (_, index) => {
+              const date = new Date(monthInfo.month.getFullYear(), monthInfo.month.getMonth(), index + 1);
+
+              const day = this.getDayInfo(date);
+
+              return h('view', {
+                    class: `a-calendar__day  a-calendar__day--${day.type}`,
+                    style: index ? '' : `margin-left:${monthInfo.dayOffset * 14.285}%;`,
+                    onClick: _ => this.handleDateCellClick(day, _)
+                  },
+                  day.topInfo && h('text', {class: `a-calendar__top-info a-calendar__top-info--${day.type}`}, day.topInfo),
+                  h('text', {class: `a-calendar__day-num  a-calendar__day-num--${day.type}`}, day.text || day.date.getDate()),
+                  day.bottomInfo && h('text', {class: `a-calendar__bottom-info a-calendar__bottom-info--${day.type}`}, day.bottomInfo)
+              )
+            }
+        )
+    );
+  },
+  handleDateCellClick(day, ev) {
+    ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
+
+    if (day.type === 'disabled') {
+      // console.log('该日期被禁用', day);
+      return false;
+    }
+
+    this.fire('select', day);
+
+    if (this.props.type === 'single') {// 单选逻辑
+      this.data.selectDay = [day.format];
+
+      if (this.hideConfirmBtn) {
+        this.onConfirm(ev);
+      }
+    } else if (this.props.type === 'range') {//范围逻辑
+      if (this.data.selectDay.length < 2) {
+        const later = (compareDay(new Date(day.format), new Date(this.data.selectDay[0])))
+        if (later > 0) {
+          if (this.props['max-range'] && later >= this.props['max-range']) {
+            Toast(this.props['range-prompt'] ? this.props['range-prompt'].replace('$', later) : `选择天数不能超过 ${this.props['max-range']} 天`);
+          } else {
+            this.data.selectDay.push(day.format);
+            if (this.hideConfirmBtn) {
+              this.onConfirm(ev);
+            }
+          }
+
+        } else {
+          this.data.selectDay = [day.format];
+        }
+      } else {
+        this.data.selectDay = [day.format];
+      }
+    } else {//其他多选
+      const findIndex = this.data.selectDay.indexOf(day.format);
+      if (findIndex === -1) {
+        this.data.selectDay.push(day.format);
+      } else {
+        this.data.selectDay.splice(findIndex, 1);
+      }
+    }
+
+  },
+  onConfirm(ev) {
+    ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
+    const result = this.props.type === 'single' ? this.data.selectDay[0] : this.data.selectDay;
+    this.$model.show = false;
+    this.fire('confirm', result);
+    this.$model['default-date'] = result;
+  },
+  getDayInfo(date) {
+    const day = {date, format: dateFormat('Y-mm-dd', date)};
+    day.type = 'normal';
+    if (date >= this.props['min-date'] && date <= this.props['max-date']) {
+      const findIndex = this.data.selectDay.indexOf(day.format);
+      if (this.props.type === 'range') {
+        if (findIndex === 0) {
+          day.type = 'start';
+          day.bottomInfo = '开始';
+        } else if (findIndex === 1) {
+          day.type = 'end';
+          day.bottomInfo = '结束';
+        } else if (this.data.selectDay.length === 2 && date > new Date(this.data.selectDay[0]) && date < new Date(this.data.selectDay[1])) {
+          day.type = 'middle';
+        }
+      } else if (findIndex >= 0) {
+        day.type = 'selected';
+      }
+    } else {
+      day.type = 'disabled';
+    }
+
+    return typeof this.props.formatter === 'function' ? this.props.formatter(day) : day;
+  }
+}
+</script>
+
+<style scoped>
+.a-calendar {
+}
+
+.a-calendar__header {
+  border-bottom: 2px solid #eee;
+  flex-shrink: 0;
+}
+
+
+.a-calendar__title {
+  font-size: 16px;
+  height: 44px;
+  font-weight: 500;
+  line-height: 44px;
+  text-align: center;
+}
+
+
+.a-calendar__subtitle {
+  font-size: 14px;
+  height: 44px;
+  font-weight: 500;
+  line-height: 44px;
+  text-align: center;
+}
+
+.a-calendar__weekdays {
+  flex-flow: row nowrap;
+}
+
+
+.a-calendar__weekday {
+  flex: 1;
+  font-size: 12px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.a-calendar__body {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.a-calendar__month {
+  position: relative;
+}
+
+.a-calendar__month-mark {
+  position: absolute;
+  color: rgba(242, 243, 245, 0.8);
+  font-size: 160px;
+  font-weight: bold;
+  pointer-events: none;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  font-family: monospace;
+}
+
+.a-calendar__days {
+  flex-flow: row wrap;
+}
+
+
+.a-calendar__day {
+  width: 14.285%;
+  height: 64px;
+  font-size: 16px;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.a-calendar__day--normal {
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.a-calendar__day--selected, .a-calendar__day--start, .a-calendar__day--end {
+  background-color: #ee0a24;
+  border-radius: 4px;
+}
+
+
+.a-calendar__day-num--normal, .a-calendar__top-info--normal, .a-calendar__bottom-info--normal {
+  color: #323233;
+}
+
+.a-calendar__day-num--selected, .a-calendar__day-num--start, .a-calendar__day-num--end,
+.a-calendar__bottom-info--selected, .a-calendar__bottom-info--start, .a-calendar__bottom-info--end,
+.a-calendar__top-info--selected, .a-calendar__top-info--start, .a-calendar__top-info--end {
+  color: #FFF;
+}
+
+
+.a-calendar__day--middle {
+  background: rgba(238, 10, 36, 0.1);
+}
+
+.a-calendar__day-num--middle {
+  color: #ee0a24;
+}
+
+
+.a-calendar__footer {
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+  padding: 0 16px;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.a-calendar__btn {
+  color: #fff;
+  background-color: #ee0a24;
+  border: 1px solid #ee0a24;
+  height: 36px;
+  margin: 8px;
+  border-radius: 18px;
+  line-height: 36px;
+  text-align: center;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.a-calendar__btn--able {
+  opacity: 1;
+}
+
+.a-calendar__btn--disabled {
+  opacity: 0.5;
+}
+
+.a-calendar__top-info, .a-calendar__bottom-info {
+  font-size: 10px;
+  line-height: 14px;
+}
+
+.a-calendar--disabled {
+  opacity: 0.2;
+}
+</style>

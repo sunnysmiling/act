@@ -1,0 +1,165 @@
+<template>
+
+
+  <view class="page">
+    <a-nav-bar title="simple-grid" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+
+      <view class="simple">
+        <text class="simple-title">介绍</text>
+        <text class="simple-desc">宫格可以在水平方向上把页面分隔成等宽度的区块，用于展示内容或进行页面导航。</text>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+        <text class="simple-desc">通过 icon 属性设置格子内的图标，text 属性设置文字内容。</text>
+
+        <a-grid>
+          <a-grid-item icon="picture" text="文字"/>
+          <a-grid-item icon="picture" text="文字"/>
+          <a-grid-item icon="picture" text="文字"/>
+          <a-grid-item icon="picture" text="文字"/>
+        </a-grid>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">自定义列数</text>
+        <text class="simple-desc">默认一行展示四个格子，可以通过 column-num 自定义列数。</text>
+
+        <a-grid :column-num="3">
+          <a-grid-item v-for="value in Array.from({length:6})" icon="picture" text="文字"/>
+        </a-grid>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">自定义内容</text>
+        <text class="simple-desc">通过默认插槽可以自定义格子展示的内容。通过 border 属性控制是否有边框。</text>
+
+        <a-grid :border="false" :column-num="3">
+          <a-grid-item>
+            <img src="https://img.yzcdn.cn/vant/apple-1.jpg" alt="" class="demo-img"/>
+          </a-grid-item>
+          <a-grid-item>
+            <img src="https://img.yzcdn.cn/vant/apple-2.jpg" alt="" class="demo-img"/>
+          </a-grid-item>
+          <a-grid-item>
+            <img src="https://img.yzcdn.cn/vant/apple-3.jpg" alt="" class="demo-img"/>
+          </a-grid-item>
+        </a-grid>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">正方形格子</text>
+        <text class="simple-desc">设置 square 属性后，格子的高度会和宽度保持一致。</text>
+
+        <a-grid square>
+          <a-grid-item v-for="value in Array.from({length:8})" :key="value" icon="picture" text="文字"/>
+        </a-grid>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">格子间距</text>
+        <text class="simple-desc">通过 gutter 属性设置格子之间的距离。</text>
+
+        <a-grid :gutter="10">
+          <a-grid-item v-for="value in Array.from({length:8})" :key="value" icon="picture" text="文字"/>
+        </a-grid>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">内容横排</text>
+        <text class="simple-desc">将 direction 属性设置为 horizontal，可以让宫格的内容呈横向排列。</text>
+
+        <a-grid direction="horizontal" :column-num="3">
+          <a-grid-item v-for="value in Array.from({length:3})" :key="value" icon="picture" text="文字"/>
+        </a-grid>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">页面导航</text>
+        <text class="simple-desc">将 direction 属性设置为 horizontal，可以让宫格的内容呈横向排列。</text>
+
+        <a-grid :column-num="2">
+          <a-grid-item icon="home" text="路由跳转" to="simple-button"/>
+          <a-grid-item icon="search" text="URL 跳转" url="../simple-button/simple-button"/>
+        </a-grid>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">徽标提示</text>
+        <text class="simple-desc">设置 dot 属性后，会在图标右上角展示一个小红点。设置 badge 属性后，会在图标右上角展示相应的徽标。</text>
+
+        <a-grid :column-num="2">
+          <a-grid-item icon="home" text="文字" dot/>
+          <a-grid-item icon="search" text="文字" badge="99+"/>
+        </a-grid>
+
+      </view>
+
+    </scroll-view>
+  </view>
+
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import AGrid from "../../components/act/a-grid";
+import AGridItem from "../../components/act/a-grid-item";
+
+export default {
+  name: "simple-grid",
+  components: {AGridItem, AGrid, ANavBar},
+  methods: {
+    testClick() {
+      api.toast({
+        msg: '对对对'
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  margin-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+
+.demo-img {
+  width: 50px;
+  height: 50px;
+}
+</style>

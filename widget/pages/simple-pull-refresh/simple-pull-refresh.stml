@@ -1,0 +1,94 @@
+<template name="simple-pull-refresh">
+  <view class="page">
+    <a-nav-bar title="simple-pull-refresh" left-arrow/>
+    <a-tabs style="flex:1;" $active="active" @change="onChange">
+      <a-tab title="基础用法">
+        <scroll-view style="height:100%;" scroll-y show-scrollbar={false}>
+          <a-pull-refresh $refreshing="isLoading1" @refresh="onRefresh"/>
+          <text class="simple-title">下拉刷新示例</text>
+        </scroll-view>
+      </a-tab>
+      <a-tab title="成功提示">
+        <scroll-view style="height:100%;" scroll-y show-scrollbar={false}>
+          <a-pull-refresh $refreshing="isLoading2" success-text="刷新成功" success-duration="1000" @refresh="onRefresh"/>
+          <text class="simple-title">下拉刷新示例</text>
+        </scroll-view>
+      </a-tab>
+      <a-tab title="自定义提示">
+        <scroll-view style="height:100%;" scroll-y show-scrollbar={false}>
+          <a-pull-refresh $refreshing="isLoading3" head-height="80" @refresh="onRefresh" @pulling="onPulling">
+            <!-- 下拉提示，通过 scale 实现一个缩放效果 -->
+            <template _slot="pulling">
+              <img 
+                src="https://docs.apicloud.com/act/img/doge.png" 
+                class="doge"
+                style={`transform:scale(${Math.min(distance/80,1)})`}
+              />
+            </template>
+            <template _slot="loosing">
+              <img src="https://docs.apicloud.com/act/img/doge.png" class="doge" />
+            </template>
+            <template _slot="loading">
+              <img src="https://docs.apicloud.com/act/img/doge-fire.jpg" class="doge" />
+            </template>
+          </a-pull-refresh>
+          <text class="simple-title">下拉刷新示例</text>
+        </scroll-view>
+      </a-tab>
+    </a-tabs>
+  </view>
+</template>
+
+<script>
+import "../../components/act/a-nav-bar";
+import "../../components/act/a-tabs";
+import "../../components/act/a-tab";
+import "../../components/act/a-pull-refresh";
+
+export default {
+  name: "simple-pull-refresh",
+  data() {
+    return {
+      active: 0,
+      isLoading1: false,
+      isLoading2: false,
+      isLoading3: false,
+      distance: 0
+    }
+  },
+  methods:{
+    onChange(e) {
+      this.data.active = e.detail.current;
+    },
+    onRefresh() {
+      setTimeout(() => {
+        this.data.isLoading1 = false;
+        this.data.isLoading2 = false;
+        this.data.isLoading3 = false;
+      }, 2000);
+    },
+		onPulling(e) {
+      this.data.distance = e.detail.distance;
+		}
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  background-color: #F8F8F8;
+}
+
+.simple-title {
+  margin: 16px;
+  font-size: 18px;
+}
+
+.doge {
+  width: 140px;
+  height: 72px;
+  margin: auto;
+  border-radius: 4px;
+}
+</style>

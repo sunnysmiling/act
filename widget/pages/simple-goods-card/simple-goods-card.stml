@@ -1,0 +1,106 @@
+<template>
+  <view class="page">
+    <a-nav-bar title="simple-goods-card" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+        <text class="simple-desc">
+          商品卡片，用于展示商品的图片、价格等信息。
+        </text>
+
+        <a-goods-card
+            num="2"
+            price="2.00"
+            desc="描述信息"
+            title="商品标题"
+            thumb="https://www.apicloud.com/icon/91/d1/91d1cae110eb88a6789da0d63b418f5c.png"
+        />
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">营销信息</text>
+        <text class="simple-desc">
+          通过 origin-price 设置商品原价，通过 tag 设置商品左上角标签。
+        </text>
+
+        <a-goods-card
+            num="2"
+            tag="标签"
+            price="2.00"
+            desc="描述信息"
+            title="商品标题"
+            thumb="https://img.yzcdn.cn/vant/ipad.jpeg"
+            origin-price="10.00"
+        />
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">自定义内容</text>
+        <text class="simple-desc">
+          GoodsCard 组件提供了多个插槽，可以灵活地自定义内容。
+        </text>
+
+        <a-goods-card
+            num="2"
+            price="2.00"
+            desc="描述信息"
+            title="商品标题"
+            thumb="https://www.apicloud.com/img/default.png"
+        >
+          <template _slot="tags">
+            <a-tag plain type="danger">标签</a-tag>
+            <a-tag plain type="danger">标签</a-tag>
+          </template>
+          <template _slot="footer">
+            <a-button size="mini" round @click="test">按钮</a-button>
+            <a-button size="mini" round>按钮</a-button>
+          </template>
+        </a-goods-card>
+
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import AGoodsCard from "../../components/act/a-goods-card";
+import ATag from "../../components/act/a-tag";
+import AButton from "../../components/act/a-button";
+
+export default {
+  name: "simple-goods-card",
+  components: {ATag, AButton, AGoodsCard, ANavBar},
+  methods: {
+    test() {
+      console.log('test')
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  flex: 1;
+  background-color: #fff;
+}
+
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+</style>

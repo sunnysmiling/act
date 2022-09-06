@@ -1,0 +1,188 @@
+<script>
+import AIcon from '../a-icon';
+import {mixedClass, syncModel} from "../utils";
+
+export default {
+  name: "a-stepper",
+
+  data() {
+    return {
+      value: this.reviseValue(this.props.value)
+    }
+  },
+  install() {
+
+    this.render = props => {
+      const {h} = apivm;
+      syncModel.call(this);
+      if (this.$model.value) {
+        this.data.value = this.reviseValue(this.$model.value);
+      }
+
+      const [isMin, isMax] = this.range;
+
+      return h('view', {
+            class: `a-stepper ${props.class || ''}`,
+            style: `${props.style || ''}`
+          },
+          h('view', {
+                class: `a-stepper__btn  a-stepper__minus${props.theme ? '--' + props.theme : ''}${isMin || props.disabled ? '--disabled' : ''}`,
+                onClick: _ => isMin || props.disabled ? {} : this.handleClick(-1, _)
+              },
+              h(AIcon, {
+                class: 'a-stepper__icon',
+                name: 'minus',
+                size: (props['button-size'] || 28) - 6,
+                color: props.theme ? '#FFF' : (isMin || props.disabled ? '#c8c9cc' : '#323233')
+              })),
+          h('input',
+              {
+                class: mixedClass(`a-stepper__input a-stepper__input--${props.theme ? props.theme : 'normal'}`, {
+                  'a-stepper__input--disabled': props.disabled,
+                }),
+                value: props['decimal-length'] ? this.data.value.toFixed(Number(props['decimal-length'])) : this.data.value,
+                onblur: this.handleBlur,
+                'keyboard-type': props.integer ? 'number' : 'decimal',
+                disabled: !!(props.disabled || props['disable-input']),
+                style: `width:${props['input-width'] || 32}px;height:${props['button-size'] || 28}px;`
+              }
+          ),
+          h('view', {
+                class: `a-stepper__btn a-stepper__plus${props.theme ? '--' + props.theme : ''}${isMax || props.disabled ? '--disabled' : ''}`,
+                onClick: _ => isMax || props.disabled ? {} : this.handleClick(1, _)
+              },
+              h(AIcon, {
+                class: 'a-stepper__icon',
+                name: 'add',
+                size: (props['button-size'] || 28) - 6,
+                color: props.theme ? '#FFF' : (isMax || props.disabled ? '#c8c9cc' : '#323233')
+              }))
+      );
+    }
+  },
+  handleClick(change, _) {
+    change *= typeof this.props.step === 'undefined' ? 1 : this.props.step;
+    const value = this.data.value + change;
+    this.handleValue(value, 'click');
+  },
+  computed: {
+    range() {
+      return this.getRange(this.data.value);
+    }
+  },
+  handleValue(value, type) {
+
+    const _run = () => {
+      value = this.reviseValue(Number(value));
+      this.$model.value = value;
+      this.fire('change', {value, type});
+      this.data.value = value;
+    }
+
+    if (this.props['before-change']) {
+      this.props['before-change'](value).then(_ => {
+        _ && _run();
+      })
+    } else {
+      _run();
+    }
+
+  },
+  handleBlur({detail: {value}}) {
+    this.handleValue(value, 'blur');
+  },
+  reviseValue(value) {
+    const [isMin, isMax] = this.getRange(value);
+    if (isMin) {
+      value = this.props.min;
+    } else if (isMax) {
+      value = this.props.max;
+    }
+
+    if (this.props.integer) {
+      value = Math.trunc(value);
+    }
+
+    return Number(value);
+  },
+  getRange(value) {
+    value = Number(value);
+    const props = this.props;
+    if (!props || typeof props.min === 'undefined') this.props.min = 1;
+    if (!props || typeof props.max === 'undefined') this.props.max = Infinity;
+    return [value <= Number(props.min), value >= Number(props.max)];
+  }
+}
+</script>
+
+<style scoped>
+.a-stepper {
+  flex-flow: row nowrap;
+}
+
+
+.a-stepper__btn {
+  margin: 0;
+  color: #323233;
+  vertical-align: middle;
+  background-color: #f2f3f5;
+  border: 0 #FFF;
+  cursor: pointer;
+  text-align: center;
+}
+
+.a-stepper__plus--round, .a-stepper__minus--round {
+  border-radius: 50%;
+  background-color: #ee0a24;
+}
+
+.a-stepper__minus {
+  border-radius: 4px 0 0 4px;
+}
+
+.a-stepper__plus {
+  border-radius: 0 4px 4px 0;
+}
+
+.a-stepper__input {
+  box-sizing: border-box;
+  margin: 0 2px;
+  padding: 0;
+  color: #323233;
+  font-size: 14px;
+  line-height: normal;
+  text-align: center;
+  vertical-align: middle;
+  border: 0 #fff;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+
+.a-stepper__input--normal {
+  background-color: #f2f3f5;
+}
+
+.a-stepper__input--round {
+  background-color: transparent;
+}
+
+.a-stepper__input--disabled {
+  opacity: 0.5;
+}
+
+.a-stepper__minus--disabled, .a-stepper__plus--disabled {
+  background-color: #f7f8fa;
+  cursor: not-allowed;
+}
+
+.a-stepper__minus--round--disabled, .a-stepper__plus--round--disabled {
+  background-color: #fbd6d9;
+  cursor: not-allowed;
+  border-radius: 50%;
+}
+
+
+.a-stepper__icon {
+  margin: 3px;
+}
+</style>

@@ -1,0 +1,107 @@
+<script>
+
+import AIcon from '../a-icon';
+import ABadge from '../a-badge';
+import {linkTo, mixedClass} from "../utils";
+
+export default {
+  name: "a-grid-item",
+  install() {
+    this.render = props => {
+      const {h} = apivm;
+
+      const direction = this._host.props.direction || 'vertical';
+
+      const renderContent = [props.icon && h(AIcon, {name: props.icon, size: props['icon-size'] || 28}),
+        props.text && h('text', {
+          class: mixedClass('a-grid-item__text', {
+            'van-grid-item__icon___van-grid-item__text': props.icon && direction === 'vertical'
+          })
+        }, props.text)
+        , props.children];
+
+      return h('view', {
+            ...props,
+            class: `a-grid-item ${props.class || ''}`,
+            style: `flex-basis: ${100 / this._host.props['column-num']}%;
+            ${this._host.props['gutter'] ? 'padding-right:' + this._host.props['gutter'] + 'px;' : ''}
+            ${props.pos.row && this._host.props['gutter'] ? 'margin-top:' + this._host.props['gutter'] + 'px;' : ''}
+            ${props.style || ''}`,
+            onclick: this.handleClick
+          },
+          h('view', {
+                class: mixedClass(`a-grid-item__content a-grid-item__content--${direction}`, {
+                      'a-grid-item__content--center': props.center !== false,
+                      'a-grid-item__content--border': this._host.props.border !== false
+                    }
+                ),
+                style: this._host.props['square'] ? `height:${api.winWidth / this._host.props['column-num']}px;` : ''
+              },
+              props.dot || props.badge ? h(ABadge, {
+                class: 'a-grid-item__badge-wrapper',
+                dot: props.dot,
+                content: props.badge
+              }, renderContent) : renderContent)
+      );
+    }
+  },
+  methods: {
+    handleClick(e) {
+      this.fire('click', e);
+      if (this.props.url) {
+        linkTo(this.props.url, this.props.title);
+      } else if (this.props.to) {
+        linkTo(this.props.to, this.props.title);
+      } else {
+        this.props.onClick && this.props.onClick(e);
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-grid-item {
+  box-sizing: border-box;
+}
+
+
+.a-grid-item__text {
+  color: #646566;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.a-grid-item__content {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 16px 8px;
+  background: #fff;
+}
+
+.a-grid-item__content--border {
+  border: 0.5px solid #ebedf0;
+}
+
+.a-grid-item__content--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.a-grid-item__content--horizontal {
+  flex-direction: row;
+}
+
+.a-grid-item__content--vertical {
+  flex-direction: column;
+}
+
+.van-grid-item__icon___van-grid-item__text {
+  margin-top: 8px;
+}
+
+.a-grid-item__badge-wrapper {
+  padding: 0 5px;
+}
+</style>

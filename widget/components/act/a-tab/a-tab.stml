@@ -1,0 +1,10 @@
+<script>
+
+export default {
+  name: 'a-tab',
+  install() {
+    this.render = props => props.children;
+  }
+}
+
+</script>

@@ -1,0 +1,187 @@
+<script>
+import {syncModel} from "../utils";
+
+export default {
+  name: 'a-tabs',
+  data() {
+    return {
+      // current: 0
+    }
+  },
+  install() {
+    const ns = 'a-tabs';
+    syncModel.call(this);
+    this.breakpoint = this.props.breakpoint || 5;
+
+    const isScroll = this.props.children.length > this.breakpoint;
+    const scrollCls = pos => `${ns}__${pos}--${(isScroll ? 'scroll' : 'flat')}`;
+    this.render = (props) => {
+      this.current = this.$model.active || 0;
+      const {h} = apivm;
+      const {type = 'line'} = props;
+      return h('view', {class: `${ns} ${ns}--${type} ${props.class || ''}`, style: props.style},
+          h(isScroll ? 'scroll-view' : 'view', {
+                class: `${ns}__wrap  ${ns}__wrap--${type} ${scrollCls('wrap')}`,
+                'scroll-x': true,
+                'scroll-y': false
+              },
+              props.children.map((child, index) => {
+
+                    const navProps = {
+                      class: `${ns}__nav ${scrollCls('nav')}  ${ns}__nav--${type} ${ns}__nav--${type}--${index === props.children.length - 1 ? 'last' : 'not-last'} ${parseInt(this.current) === index ? ns + '__nav--active--' + type : ns + '__nav--normal--' + type}`,
+                      onclick: this.onclick.bind(this, index)
+                    };
+
+                    if (isScroll) {
+                      navProps.style = `width:${api.winWidth / this.breakpoint}px;flex-shrink:0;`
+                    }
+
+                    return h('text', navProps, child.attributes.title)
+                  }
+              )
+          ),
+          h('swiper', {
+                class: `${ns}__content`,
+                onchange: this.onchange,
+                current: this.current
+              },
+              props.children.map((child, index) => h('swiper-item', {
+                class: `${ns}__pane`
+              }, child))
+          )
+      )
+    };
+  },
+
+  onchange({detail: {current}}) {
+    this.fire('change', {current, type: 'swiper'});
+    this.current = current;
+    this.$model.active = current;
+    this.update();
+    if (current >= this.breakpoint - 1) {
+      this.setNavPos();
+    }
+  }
+  ,
+  onclick(current) {
+
+    const _run = () => {
+      this.fire('change', {current, type: 'click'});
+      this.current = current;
+      this.$model.active = current;
+      this.update();
+    }
+
+    if (this.props['before-change']) {
+
+      const result = this.props['before-change'](current);
+
+      const __run = _ => _ && _run()
+
+      result.then ? result.then(__run) : __run(result);
+    } else {
+      _run();
+    }
+
+  }
+  ,
+  setNavPos() {
+    api.toast({
+      msg: '调整Nav位置逻辑等待外形查询功能后完善'
+    })
+  }
+}
+</script>
+
+<style>
+
+.a-tabs--line {
+  background: #FFF;
+}
+
+.a-tabs--card {
+  background: transparent;
+}
+
+.a-tabs__wrap {
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.a-tabs__wrap--line {
+  /*height: 44px;*/
+}
+
+.a-tabs__wrap--scroll {
+  display: flex !important;
+}
+
+.a-tabs__wrap--card {
+  height: 32px;
+  margin: 0 16px;
+  border: 1px solid #ee0a24;
+  border-radius: 2px;
+}
+
+.a-tabs__nav {
+  text-align: center;
+  font-size: 14px;
+}
+
+.a-tabs__nav--line {
+  height: 44px;
+  line-height: 44px;
+}
+
+.a-tabs__nav--card {
+  height: 30px;
+  line-height: 30px;
+}
+
+.a-tabs__nav--scroll {
+  white-space: nowrap;
+}
+
+.a-tabs__nav--flat {
+  flex: 1;
+}
+
+.a-tabs__nav--normal--line {
+  color: #666;
+  font-weight: normal;
+}
+
+.a-tabs__nav--active--line {
+  color: #333;
+  font-weight: bold;
+}
+
+.a-tabs__nav--normal--card {
+  color: #ee0a24;
+  background-color: #fff;
+}
+
+.a-tabs__nav--active--card {
+  color: #fff;
+  background-color: #ee0a24;
+  border-right: none;
+}
+
+.a-tabs__nav--card--last {
+  border-right: none;
+}
+
+.a-tabs__nav--card--not-last {
+  border-right: 1px solid #ee0a24;
+}
+
+.a-tabs__content {
+  flex: 1;
+  min-height: 100px;
+}
+
+.a-tabs__pane {
+  flex: 1;
+  padding: 24px 20px;
+}
+</style>

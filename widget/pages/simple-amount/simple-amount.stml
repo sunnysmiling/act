@@ -1,0 +1,99 @@
+<template>
+  <view class="page">
+    <a-nav-bar title="simple-amount" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+
+        <text class="simple-desc">通过 value 传递数据。默认去尾法留两位。</text>
+        <view class="row">
+          <a-amount :value="1234.125"/>
+        </view>
+
+        <text class="simple-desc">通过子节点传递数据。precision 属性控制精度。</text>
+        <view class="row">
+          <a-amount :precision="3">1234.125</a-amount>
+        </view>
+
+
+        <text class="simple-desc">is-round-up 数字精度取舍是否四舍五入。</text>
+        <view class="row">
+          <text class="gray-origin">1234.125 →</text>
+          <a-amount is-round-up>1234.125</a-amount>
+        </view>
+
+
+        <text class="simple-desc">has-separator 数字是否有千位分隔符。</text>
+        <view class="row">
+          <text class="gray-origin">1234.125 →</text>
+          <a-amount has-separator>1234.125</a-amount>
+        </view>
+        <view class="row">
+          <text class="gray-origin">-123456.123 →</text>
+          <a-amount has-separator separator="★">-123456789.123</a-amount>
+        </view>
+
+
+        <text class="simple-desc">is-capital 数字转为中文大写。</text>
+        <view class="row">
+          <text class="gray-origin">1234.125 →</text>
+          <a-amount is-capital>1234.125</a-amount>
+        </view>
+        <view class="row">
+          <text class="gray-origin">-123456.123 →</text>
+          <a-amount is-capital>-123456.123</a-amount>
+        </view>
+        <view class="row">
+          <text class="gray-origin">1234.1010 →</text>
+          <a-amount is-capital>1234.1010</a-amount>
+        </view>
+      </view>
+
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import "../../components/act/a-nav-bar";
+import "../../components/act/a-amount";
+
+export default {
+  name: "simple-amount"
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px;
+}
+
+.row {
+  flex-flow: row wrap;
+  padding: 16px;
+}
+
+.gray-origin {
+  color: #ccc;
+  margin-right: 6px;
+}
+
+</style>

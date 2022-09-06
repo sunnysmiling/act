@@ -1,0 +1,13 @@
+lockfileVersion: 5.3
+
+specifiers:
+  mark-to-jsonml: ^0.5.0
+
+dependencies:
+  mark-to-jsonml: 0.5.2
+
+packages:
+
+  /mark-to-jsonml/0.5.2:
+    resolution: {integrity: sha512-y5EtSrP2xX20bgZVA98346PBK3nUvcaaUJ+gRl32feWB+QkrdlOsWLLsqlpWzMJZRmlJ2UZiGsR8l6OaC/2gUQ==}
+    dev: false

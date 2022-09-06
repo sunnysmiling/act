@@ -1,0 +1,45 @@
+<template>
+  <view class="page">
+      <view @click="toggle" :class="'item '+(current===a?'selected':'normal')" v-for="a in [true,false]">
+        <text>{{current===a?'selected':'normal'}}</text>
+      </view>
+  </view>
+</template>
+<script>
+export default {
+  name: 'diff-color',
+  data() {
+    return {
+      current: true
+    }
+  },
+  methods: {
+    toggle() {
+      this.current = !this.current;
+    }
+  }
+}
+</script>
+<style>
+.page {
+  height: 100%;
+  transition: background-color 1s;
+}
+
+
+.item {
+  height: 50px;
+  border: 1px solid blue;
+}
+
+
+.normal {
+  background-color: #fff;
+}
+
+.selected {
+  background-color: #ee0a24;
+}
+
+
+</style>

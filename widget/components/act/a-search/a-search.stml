@@ -1,0 +1,109 @@
+<template>
+{slotSupport(
+  <view class={backgroundClass} style={backgroundStyle}>
+    <view _slot="left"></view>
+    <view class={contentClass}>
+      <view>
+        <!-- 灵异事件，不包一层，编译后 v-if 失效。。。 -->
+        <view v-if={this.props.label || haveSlot('label', this.props)} class="a-search-label" >
+          <text v-if={!haveSlot('label', this.props)} class="a-search-label-default" >{this.props.label}</text>
+          <view _slot="label"></view>
+        </view>
+      </view>
+      <a-field clearable {...this.fieldAttrs} label="" left-icon={this.props['left-icon']||'search'} confirm-type="search" @confirm="onConfirm" />
+    </view>
+    <view v-if={this.props['show-action']} class="a-search-action">
+      <text v-if={!haveSlot('action', this.props)} class="a-search-action-cancel" @click="onCancel" >{this.props['action-text'] || '取消'}</text>
+      <view _slot="action"></view>
+    </view>
+  </view>
+, this.props.children)
+}
+</template>
+
+<script>
+import '../a-field/a-field.stml'
+import {syncModel, slotSupport, haveSlot} from "../utils/index";
+
+export default {
+  name: "a-search",
+  data() {
+    return {}
+  },
+  computed: {
+    backgroundClass() {
+      return `a-search ${this.props.class||''} ${this.props['show-action']?' a-search-show-action':''}`;
+    },
+    backgroundStyle() {
+      return `background:${this.props.background||'white'};${this.props.style||''}`;
+    },
+    contentClass() {
+      return 'a-search-content' + (this.props.shape == 'round' ? ' a-search-content-round' : '');
+    },
+    fieldAttrs() {
+      return {...this.props, style:"background:transparent;flex-grow:1;padding-left:0;padding-right:0;", class:'form-search'};
+    }
+  },
+  methods:{
+    onConfirm(e) {
+      this.fire('search', e.detail);
+    },
+    onCancel() {
+      this.$model.value = '';
+      this.fire('cancel', {});
+    },
+    beforeRender(){
+      if (!this.$model) {
+        syncModel.call(this);
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-search {
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  background: white;
+}
+.a-search-label {
+  flex-direction: row;
+  align-items: center;
+  padding: 0 5px;
+}
+.a-search-label-default {
+  color: #323233;
+  font-size: 14px;
+  line-height: 34px;
+}
+.a-search-show-action {
+  padding-right: 0;
+}
+.a-search-content {
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  padding: 0 12px;
+  background-color: #f7f8fa;
+  border-radius: 2px;
+}
+.a-search-content-round {
+  border-radius: 999px;
+}
+.a-search-action {
+  padding: 0 8px;
+}
+.a-search-action-cancel {
+  color: #323233;
+  font-size: 14px;
+  line-height: 34px;
+  cursor: pointer;
+  user-select: none;
+}
+.a-search-action-cancel:active {
+  opacity: 0.8;
+}
+</style>

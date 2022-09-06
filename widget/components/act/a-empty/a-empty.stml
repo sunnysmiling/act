@@ -1,0 +1,83 @@
+<script>
+
+export default {
+  name: "a-empty",
+  install() {
+    this.render = props => {
+      const {h} = apivm;
+
+
+      if (!props.image) {
+        props.image = 'default';
+      }
+
+      if (!props.image.includes('/')) {
+        props.image = this.asset(`empty-image-${props.image || ''}.png`);
+      }
+
+
+      const imgAttr = {class: 'a-empty__image', src: props.image};
+
+      if (props['image-size']) {
+        imgAttr.style = `width:${props['image-size']}px;height:${props['image-size']}px;`
+      } else {
+        imgAttr.class += ' a-empty__image--default-size';
+      }
+
+      return h('view', {class: `a-empty ${props.class || ''}`, style: `${props.style}||''`,},
+          h('img', imgAttr),
+          h('text', {class: 'a-empty__description'}, props.description),
+          h('view', {class: 'a-empty__bottom'}, props.children)
+      );
+
+    }
+  },
+  /**
+   * 附件路径
+   * @param name
+   * @returns {string}
+   */
+   asset(name){
+     return `../../image/act/${name}`;
+  }
+}
+</script>
+
+<style scoped>
+.a-empty {
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 32px 0;
+}
+
+.a-empty__image {
+}
+
+.a-empty__image--default-size {
+  width: 160px;
+  height: 160px;
+}
+
+.a-empty__description {
+  margin-top: 16px;
+  padding: 0 60px;
+  color: #969799;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.a-empty__bottom {
+  margin-top: 24px;
+}
+</style>

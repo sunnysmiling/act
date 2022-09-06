@@ -1,0 +1,104 @@
+<template name="simple-skeleton">
+  <view class="page">
+    <a-nav-bar title="simple-skeleton" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+        <text class="simple-desc">通过 title 属性显示标题占位图，通过 row 属性配置占位段落行数。</text>
+
+        <a-skeleton title row="3"/>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">显示头像</text>
+        <text class="simple-desc">通过 avatar 属性显示头像占位图。</text>
+
+        <a-skeleton title avatar row="3"/>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">展示子组件</text>
+        <text class="simple-desc">将 loading 属性设置成 false 表示内容加载完成，此时会隐藏占位图，并显示 Skeleton 的子组件。</text>
+
+        <switch style="margin-bottom:16px" onchange="onchange"/>
+
+        <a-skeleton loading={loading} title avatar row="3">
+          <view class="demo-preview">
+            <view>
+              <image class="demo-img" src="https://docs.apicloud.com/apicloud3/favicon.png" />
+            </view>
+            <view style="flex:1">
+              <text class="demo-title">{title}</text>
+              <text class="demo-desc">{desc}</text>
+            </view>
+          </view>
+        </a-skeleton>
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import "../../components/act/a-nav-bar";
+import "../../components/act/a-skeleton";
+
+export default {
+  name: "simple-skeleton",
+  data() {
+    return {
+      title: '关于 act',
+      desc: 'act 是一套轻量、可靠的 avm 组件库，提供了丰富的基础组件和业务组件，帮助开发者快速搭建移动应用。',
+      loading: true
+    }
+  },
+  methods: {
+    onchange(e) {
+      this.data.loading = !e.detail.value;
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  background-color: #fff;
+}
+.simple {
+  margin: 16px;
+}
+.simple-title {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.simple-desc {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #999;
+}
+.demo-preview {
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+.demo-img {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-right: 16px;
+  background-color: #f2f3f5;
+  border-radius: 999px;
+}
+.demo-title {
+  line-height: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.demo-desc {
+  margin-top: 12px;
+  line-height: 20px;
+  font-size: 14px;
+}
+</style>

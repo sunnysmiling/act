@@ -1,0 +1,172 @@
+<template name="simple-icon">
+  <view class="page">
+    <a-nav-bar title="simple-icon" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="todo">
+        <text class="simple-title">说明</text>
+        <text class="simple-desc ">
+
+          本组件是一个临时过渡方案。现在已经有更成熟、更自由、性能更好的 [a-iconfont] 方案。
+          本组件是基于后端渲染实现，线上服务将于 2022 年 12 月 31 日 停止。 项目中有使用到的建议迁移到[a-iconfont] 组件，或者后端私有部署。
+          私有部署源码参考：https://github.com/YangYongAn/icon.yangyongan.com
+
+        </text>
+      </view>
+      <view class="simple">
+        <text class="simple-title">基本用法</text>
+        <text class="simple-desc">
+          Icon 的 name 属性支持传入图标名称或图片链接，所有可用的图标名称见右侧示例。
+        </text>
+
+
+        <view class="row">
+          <a-icon name="good"/>
+          <a-icon name="https://b.yzcdn.cn/vant/icon-demo-1126.png"/>
+        </view>
+      </view>
+      <view class="simple">
+        <text class="simple-title">图标大小</text>
+        <text class="simple-desc">
+          Icon 的 size 属性用来设置图标的尺寸大小，默认是16,单位 px。
+        </text>
+
+        <view class="row">
+          <a-icon name="good" size="32"/>
+          <a-icon name="user" size="66"/>
+        </view>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">图标颜色</text>
+        <text class="simple-desc">
+          Icon 的 color 属性用来设置图标的颜色。
+        </text>
+
+        <view class="row">
+          <a-icon name="good" size="32" color="red"/>
+          <a-icon name="user" size="32" color="#3af"/>
+          <a-icon name="map" size="32" color="rgb(123,213,21)"/>
+        </view>
+      </view>
+
+      <view class="simple todo">
+        <text class="simple-title" style="color: #CCC;">徽标提示 [TODO]</text>
+        <text class="simple-desc">
+          设置 dot 属性后，会在图标右上角展示一个小红点；设置 badge 属性后，会在图标右上角展示相应的徽标。
+        </text>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">所有图标</text>
+        <text class="simple-desc">
+          图标样式持续更新中。
+        </text>
+        <text class="simple-desc">
+          以 logo-i 为前缀的带有辨识度品牌色的多色图标不可更改颜色。
+        </text>
+        <view class="row">
+          <view class="icon-item" v-for="icon in icons">
+            <a-icon :name="icon" size="32"/>
+            <text class="icon-item-text">{{ icon }}</text>
+          </view>
+        </view>
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import AIcon from "../../components/act/a-icon";
+
+export default {
+  name: "simple-icon",
+  components: {AIcon, ANavBar},
+  data() {
+    return {
+      icons: []
+    }
+  },
+  installed() {
+    this.getIcon()
+  },
+  methods: {
+
+    getIcon() {
+
+      if (api.appVersion === 'WEB latest') {
+
+        fetch('https://icon.yangyongan.com/api/')
+            .then(res => res.json())
+            .then(({data}) => {
+              this.data.icons = data
+            })
+
+      } else {
+
+        api.ajax({
+          url: 'https://icon.yangyongan.com/api/'
+        }, ret => {
+          this.data.icons = ret.data;
+        })
+      }
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.todo {
+  background: #f1e9d5;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+.row {
+  flex-flow: row wrap;
+  padding: 16px;
+}
+
+
+.icon-item {
+  width: 25%;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.icon-item-text {
+  color: #999;
+  font-size: 11px;
+  height: 32px;
+  text-align: center;
+}
+
+.color-item {
+  margin: 5px;
+  font-size: 11px;
+}
+</style>

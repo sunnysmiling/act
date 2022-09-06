@@ -1,0 +1,75 @@
+<template name="extend">
+  <view class="page">
+    <a-nav-bar title="组合拓展"/>
+    <scroll-view class="main" scroll-y>
+
+      <text class="title">业务组件组件</text>
+
+      <a-link to="simple-goods-card">
+        <view class="link">
+          <text class="com-name">GoodsCard 商品卡片</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+      <view style="height: 36px;">
+
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+
+import ANavBar from "../../components/act/a-nav-bar";
+import ALink from "../../components/act/a-link";
+import AIcon from "../../components/act/a-icon";
+
+export default {
+  name: "extend",
+  components: {AIcon, ANavBar, ALink},
+  methods: {}
+}
+</script>
+
+<style scoped>
+
+.page {
+  height: 100%;
+  background-color: #FFF;
+}
+
+.main {
+  flex: 1;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+
+.title {
+  margin: 24px 0 8px 16px;
+  color: rgba(69, 90, 100, 0.6);
+  font-size: 14px;
+}
+
+.link {
+  flex-flow: row nowrap;
+  margin: 0 0 12px;
+  padding: 0 20px;
+  background: #f7f8fa;
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+  height: 40px;
+  border: 1px solid #f7f8fa;
+  border-radius: 20px;
+  align-items: center;
+}
+
+.com-name {
+  font-size: 14px;
+  line-height: 40px;
+  color: #323233;
+  font-weight: 600;
+  flex: 1;
+}
+</style>

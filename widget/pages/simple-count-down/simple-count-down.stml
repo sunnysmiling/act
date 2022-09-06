@@ -1,0 +1,182 @@
+<template name="simple-count-down">
+  <view class="page">
+    <a-nav-bar title="simple-count-down" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+        <text class="simple-desc">
+          time 属性表示倒计时总时长，单位为毫秒。
+        </text>
+        <view class="demo-row">
+          <a-count-down :time="time[0]"/>
+        </view>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">自定义格式</text>
+        <text class="simple-desc">
+          time 属性表示倒计时总时长，单位为毫秒。
+        </text>
+
+        <view class="demo-row">
+          <a-count-down :time="time[1]" format="DD 天 HH 时 mm 分 ss 秒"/>
+        </view>
+
+      </view>
+
+      <!--      <view class="simple todo">-->
+      <!--        <text class="simple-title">毫秒级渲染</text>-->
+      <!--        <text class="simple-desc">-->
+      <!--          倒计时默认每秒渲染一次，设置 millisecond 属性可以开启毫秒级渲染。-->
+      <!--        </text>-->
+
+      <!--        <view class="demo-row">-->
+      <!--          <a-count-down :time="time[2]" millisecond format="HH:mm:ss:SSS"/>-->
+      <!--        </view>-->
+
+      <!--      </view>-->
+
+
+      <view class="simple">
+        <text class="simple-title">自定义样式</text>
+        <text class="simple-desc">
+          通过插槽自定义倒计时的样式，timeData 对象格式见下方表格。
+        </text>
+
+
+        <view class="demo-row">
+          <a-count-down :time="time[3]">
+            <template _slot="default:timeData">
+              <text class="block">[[timeData.hours]]</text>
+              <text class="colon">:</text>
+              <text class="block">[[timeData.minutes]]</text>
+              <text class="colon">:</text>
+              <text class="block">[[timeData.seconds]]</text>
+            </template>
+          </a-count-down>
+        </view>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">手动控制</text>
+        <text class="simple-desc">
+          通过 ref 获取到组件实例后，可以调用 start、pause、reset 方法。
+        </text>
+
+
+        <view class="demo-row">
+          <a-ref name="countDown">
+            <a-count-down
+                ref="countDown"
+                :time="3000"
+                millisecond
+                :auto-start="false"
+                format="ss:SSS"
+                @finish="onFinish"/>
+          </a-ref>
+        </view>
+
+        <a-grid column-num="3" style="margin-top: 10px;" gutter="10">
+          <a-grid-item text="开始" icon="play-circle" @click="start"/>
+          <a-grid-item text="暂停" icon="pause-circle" @click="pause"/>
+          <a-grid-item text="重置" icon="refresh" @click="reset"/>
+        </a-grid>
+      </view>
+
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+
+import ANavBar from "../../components/act/a-nav-bar";
+import ACountDown from "../../components/act/a-count-down";
+import ARef from "../../components/act/a-ref";
+import Toast from "../../components/act/a-toast";
+import AGrid from "../../components/act/a-grid";
+import AGridItem from "../../components/act/a-grid-item";
+
+
+export default {
+  name: "simple-count-down",
+  components: {AGridItem, AGrid, ARef, ACountDown, ANavBar},
+  data() {
+    return {
+      time: Array.from({length: 5}).fill(30 * 60 * 60 * 1000)
+    }
+  },
+  methods: {
+    onFinish() {
+      Toast('倒计时结束')
+    },
+    start() {
+      this.$refs.countDown.start();
+    },
+    pause() {
+      this.$refs.countDown.pause();
+    },
+    reset() {
+      this.$refs.countDown.reset();
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+
+.todo {
+  background: #f1e9d5;
+}
+
+.demo-row {
+  padding: 0 20px;
+}
+
+
+.colon {
+  display: inline-block;
+  margin: 0 4px;
+  color: #ee0a24;
+  line-height: 22px;
+}
+
+.block {
+  display: inline-block;
+  width: 22px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  background-color: #ee0a24;
+  line-height: 22px;
+  height: 22px;
+  border-radius: 4px;
+}
+</style>

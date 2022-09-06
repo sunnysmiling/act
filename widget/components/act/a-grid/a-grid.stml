@@ -1,0 +1,38 @@
+<script>
+
+export default {
+  name: "a-grid",
+  install() {
+    this.render = props => {
+
+      if (!props['column-num']) {
+        props['column-num'] = 4;
+      }
+
+
+      props.children = props.children.map((child, index) => {
+        const pos = {
+          col: index % props['column-num'],
+          row: Math.trunc(index / props['column-num'])
+        }
+        return {...child, attributes: {...child.attributes, index, pos,...props}};
+      })
+
+
+      const {h} = apivm;
+      return h('view', {
+        class: `a-grid ${props.class || ''}`,
+        style: `${props.style || ''} ${props.gutter ? 'padding-left:' + props.gutter + 'px' : ''}`,
+      }, props.children);
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+</style>

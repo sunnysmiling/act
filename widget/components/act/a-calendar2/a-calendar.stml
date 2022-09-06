@@ -1,0 +1,464 @@
+
+<script>
+import {compareDay, dateFormat, syncModel} from "../utils";
+import APopup from '../a-popup';
+import Toast from "../a-toast";
+
+export default {
+  name: "a-calendar",
+  apiready(){
+    console.log(props)
+  },
+  data() {
+    return {
+      selectDay: [],
+      subTitle: '',
+      dateRange:[]
+    }
+  },
+  compute: {
+    confirmBtnAble() {
+      if (this.props.type === 'range') {
+        return this.dateRange.length === 2;
+      }
+      return this.dateRange.length > 0;
+    }
+  },
+  install() {
+
+    syncModel.call(this);
+
+    this.render = props => {
+
+      const {h} = apivm;
+      const now = new Date();
+
+
+      if (!props.type) {
+        props.type = 'single';
+      }
+
+      if (!props['min-date']) {
+        props['min-date'] = new Date(dateFormat('Y/mm/dd 00:00:00', new Date(now.setMonth(now.getMonth()))));
+      }
+
+
+      if (!props['max-date']) {
+        props['max-date'] = new Date(new Date(props['min-date']).setMonth(props['min-date'].getMonth() + 3));
+      }
+    
+      this.hideConfirmBtn = props['show-confirm'] === false;
+
+      // (!this.data.subTitle) && (this.data.subTitle = dateFormat('Y-mm', props['min-date']));
+      (!this.data.subTitle) && (this.data.subTitle = dateFormat('Y-mm', props['date']));
+
+      console.log(props['date'])
+      this.monthDiff = (props['max-date'].getFullYear() - props['min-date'].getFullYear()) * 12 + (props['max-date'].getMonth() - props['min-date'].getMonth());
+
+      const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+      const renderHeader = h('view', {
+            class: 'a-calendar__header',
+            onClick: ev => ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true
+          },
+          props.title !== false && h('text', {class: 'a-calendar__title'}, props.title || '日期选择'),
+          h('view', {class: 'a-calendar__titlecon'}, 
+            h('text', {class: 'a-calendar__left'}, h('text', {class: 'a-calendar__left-douarrow',onClick: _ => this.lastYear(_)}, "<<"),h('text', {class: 'a-calendar__left-arrow',onClick: _ => this.lastMonth(_)}, "<")),
+            h('text', {class: 'a-calendar__subtitle'}, this.data.subTitle),
+            h('text', {class: 'a-calendar__right'}, h('text', {class: 'a-calendar__right-arrow',onClick: _ => this.nextMonth(_) }, ">"),h('text', {class: 'a-calendar__right-douarrow',onClick: _ => this.nextYear(_)}, ">>")),
+          ),
+          h('view', {class: 'a-calendar__weekdays'},
+            dayNames.map(name => h('text', {class: 'a-calendar__weekday'}, name))
+          )
+      )
+
+      const renderFooter = this.hideConfirmBtn
+          ? h('safe-area', {class: 'a-calendar__footer'})
+          :
+          this.confirmBtnAble() ? h('safe-area', {
+                class: 'a-calendar__footer safe-area',
+                onClick: _ => this.onConfirm(_)
+              }, h('text', {class: `a-calendar__btn a-calendar__btn--able`}, props['confirm-text'] || '确定')
+          ) : h('safe-area', {
+                class: 'a-calendar__footer safe-area',
+                onClick: ev => ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true
+              }, h('text', {class: `a-calendar__btn  a-calendar__btn--disabled `}, props['confirm-disabled-text'] || '确定')
+          )
+
+      return h(APopup, {
+            ...props,
+            class: `a-calendar ${props.class || ''}`,
+            style: `${props.style}`,
+            ['$show']: props.$show,
+            closeable: true,
+          }, renderHeader, this.renderBody(), renderFooter
+      );
+
+    }
+  },
+  lastMonth(){
+    let year = parseInt(this.data.subTitle.substring(0,4))
+    let month = parseInt(this.data.subTitle.substring(5))
+    if((month-1)<=0){
+      year--
+      month = 12
+    }else{
+      month--
+      month = month<10?"0"+month:month
+    }
+    this.data.subTitle = year+"-"+month
+  },
+  nextMonth(){
+    let year = parseInt(this.data.subTitle.substring(0,4))
+    let month = parseInt(this.data.subTitle.substring(5))
+    if((month+1)>12){
+      year++
+      month = "01"
+    }else{
+      // debugger
+      month++
+      month = month<10?"0"+month:month
+    }
+    console.log(month)
+    this.data.subTitle = year+"-"+month
+  },
+  lastYear(){
+    let year = parseInt(this.data.subTitle.substring(0,4))
+    let month = parseInt(this.data.subTitle.substring(5))
+    year--
+    this.data.subTitle = year+"-"+month
+  },
+  nextYear(){
+    let year = parseInt(this.data.subTitle.substring(0,4))
+    let month = parseInt(this.data.subTitle.substring(5))
+    year++
+    this.data.subTitle = year+"-"+month
+  },
+
+  renderBody() {
+    const {h} = apivm;
+
+    const baseTime = this.props['min-date'].setDate(1);
+
+    let offset = 0;
+        const day31 = [1,3,5,7,8,10,12], day30=[4,6,9,11],year = this.data.subTitle.substring(0,4),month = this.data.subTitle.substring(5)
+        var monthArr = [],dayNumber = 9
+        console.log(day31.indexOf(parseInt(month)))
+        if(day31.indexOf(parseInt(month))>=0){
+          dayNumber=31
+        }else if(day30.indexOf(parseInt(month))>=0){
+          dayNumber=30
+        }else{
+          if(parseInt(year)%4==0){
+            dayNumber = 29
+          }else{
+            dayNumber= 28
+          }
+        }
+        for (let index = 1; index <= dayNumber; index++) {
+          monthArr.push(index)
+        }
+    return h('scroll-view', {
+          class: 'a-calendar__body',
+          scroll: 'y',
+          scrollY: true,
+          'scroll-y': true
+        },
+        this.renderDays(monthArr)
+    )
+  },
+  renderDays(monthArr) {
+
+    const {h} = apivm;
+    return h('view', {class: 'a-calendar__days'},
+        monthArr.map((item, index) => {
+              // const date = new Date(monthInfo.month.getFullYear(), monthInfo.month.getMonth(), index + 1);
+
+              // const day = this.getDayInfo(date);
+              var oDate1,oDate2,oDate3
+              var currentdate = this.data.subTitle+'-'+item 
+              var startDate = this.data.dateRange[0]
+              var endDate = this.data.dateRange[1]
+              var selectFlag = false,startFlag = false,endFlag = false
+              if(this.data.dateRange.length==2){   
+                oDate1 = new Date(currentdate);
+                oDate2 = new Date(startDate);
+                oDate3 = new Date(endDate);
+                
+              }else if(this.data.dateRange.length==1){
+                oDate1 = new Date(currentdate);
+                oDate2 = new Date(startDate);
+              }
+              var className = 'a-calendar__day'
+              if(oDate3&&(oDate1.getTime() > oDate2.getTime()&&oDate1.getTime() < oDate3.getTime())){
+                selectFlag = true
+                className = 'a-calendar--middle'
+              }else if(oDate2&&(oDate1.getTime() == oDate2.getTime())){
+                startFlag = true
+                className = 'a-calendar--start--sin'
+              }else if(oDate3&&(oDate1.getTime() == oDate3.getTime())){
+                endFlag = true
+                className = 'a-calendar--end--sin'
+              }
+              console.log([currentdate,startDate,endDate])
+              console.log([selectFlag,startFlag,endFlag])
+              return h('view', {
+                    class: `${className}`,
+                    onClick: ev=>this.handleDateCellClick(ev,item,index)
+                  },
+                   h('text',{class: `a-calendar__day-num` },item)
+              )
+            }
+        )
+    );
+  },
+  handleDateCellClick(e,item,index) {
+    e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+    let newdate = this.data.subTitle+"-"+item
+    let array=[]
+    // this.data.dateRange.push(newdate)
+    if(this.data.dateRange.length<1){
+      array.push(newdate)
+    }else if(this.data.dateRange.length==1){
+      // debugger
+      let oldDate = this.data.dateRange[0]
+      if(new Date(oldDate).getTime()>new Date(newdate).getTime()){
+        array = [...[newdate,oldDate]]
+      }else{
+        array = [...[oldDate,newdate]]
+      }
+    }else if(this.data.dateRange.length==2){
+      this.data.dateRange=[]
+      array.push(newdate)
+    }
+    this.data.dateRange = [...array]
+    console.log(this.data.dateRange)
+  },
+  onConfirm(ev) {
+    ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
+    const result = this.props.type === 'single' ? this.data.dateRange[0] : this.data.dateRange;
+    this.$model.show = false;
+    this.fire('confirm', result);
+    this.$model['default-date'] = result;
+  },
+  getDayInfo(date) {
+    const day = {date, format: dateFormat('Y-mm-dd', date)};
+    day.type = 'normal';
+    if (date >= this.props['min-date'] && date <= this.props['max-date']) {
+      const findIndex = this.data.selectDay.indexOf(day.format);
+      if (this.props.type === 'range') {
+        if (findIndex === 0) {
+          day.type = 'start';
+          day.bottomInfo = '开始';
+        } else if (findIndex === 1) {
+          day.type = 'end';
+          day.bottomInfo = '结束';
+        } else if (this.data.selectDay.length === 2 && date > new Date(this.data.selectDay[0]) && date < new Date(this.data.selectDay[1])) {
+          day.type = 'middle';
+        }
+      } else if (findIndex >= 0) {
+        day.type = 'selected';
+      }
+    } else {
+      day.type = 'disabled';
+    }
+
+    return typeof this.props.formatter === 'function' ? this.props.formatter(day) : day;
+  }
+}
+</script>
+
+<style scoped>
+.a-calendar {
+}
+
+.a-calendar__header {
+  border-bottom: 2px solid #eee;
+  flex-shrink: 0;
+}
+
+
+.a-calendar__title {
+  font-size: 16px;
+  height: 44px;
+  font-weight: 500;
+  line-height: 44px;
+  text-align: center;
+}
+.a-calendar__titlecon{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 20px;
+    align-items: center;
+}
+
+.a-calendar__subtitle {
+  font-size: 14px;
+  height: 44px;
+  font-weight: 500;
+  line-height: 44px;
+  text-align: center;
+}
+.a-calendar__left-douarrow{
+  margin-right: 10px;
+  color: #a3a2a2;
+}
+.a-calendar__right-douarrow{
+  margin-left: 10px;
+  color: #a3a2a2;
+}
+.a-calendar__right-arrow,.a-calendar__left-arrow{
+  color: #a3a2a2;
+}
+
+.a-calendar__weekdays {
+  flex-flow: row nowrap;
+}
+
+
+.a-calendar__weekday {
+  flex: 1;
+  font-size: 12px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.a-calendar__body {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.a-calendar__month {
+  position: relative;
+}
+
+.a-calendar__month-mark {
+  position: absolute;
+  color: rgba(242, 243, 245, 0.8);
+  font-size: 160px;
+  font-weight: bold;
+  pointer-events: none;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  font-family: monospace;
+}
+
+.a-calendar__days {
+  flex-flow: row wrap;
+}
+
+
+.a-calendar__day {
+  /* width: 14.285%; */
+  height: 64px;
+  font-size: 16px;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  /* background: #fff; */
+  /* color: #323233; */
+}
+
+/* .a-calendar--selected, .a-calendar--start, .a-calendar--end {
+  background-color: #FCC900 !important;
+  border-radius: 4px;
+} */
+
+.a-calendar__day-num--selected, .a-calendar__day-num--start, .a-calendar__day-num--end,
+.a-calendar__bottom-info--selected, .a-calendar__bottom-info--start, .a-calendar__bottom-info--end,
+.a-calendar__top-info--selected, .a-calendar__top-info--start, .a-calendar__top-info--end {
+  color: #58090E;
+}
+
+.a-calendar--middle {
+  width: 14.285%;
+  height: 64px;
+  font-size: 16px;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  background: rgba(238, 10, 36, 0.1);
+  color: #ee0a24 !important;
+}
+.a-calendar--middle_dis {
+  background: #fff;
+  color: #323233;
+}
+.a-calendar--start--sin{
+  width: 14.285%;
+  height: 64px;
+  font-size: 16px;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  background-color: #FCC900;
+  color: #58090E;
+  border-radius: 4px;
+}
+.a-calendar--end--sin{
+  width: 14.285%;
+  height: 64px;
+  font-size: 16px;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  background-color: #FCC900;
+  color: #58090E;
+  border-radius: 4px;
+}
+/* .a-calendar__day-num--middle {
+  background-color: rgba(238, 10, 36, 0.1);
+  color: #ee0a24;
+} */
+
+.a-calendar--normal {
+  background-color: #fff;
+  border-radius: 0;
+}
+
+.a-calendar__day-num--normal, .a-calendar__top-info--normal, .a-calendar__bottom-info--normal {
+  color: #323233;
+}
+
+.a-calendar__footer {
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+  padding: 0 16px;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.a-calendar__btn {
+  color: #58090E;
+  background-color: #FCC900;
+  border: 1px solid #FCC900;
+  height: 36px;
+  margin: 8px;
+  border-radius: 18px;
+  line-height: 36px;
+  text-align: center;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.a-calendar__btn--able {
+  opacity: 1;
+}
+
+.a-calendar__btn--disabled {
+  opacity: 0.5;
+}
+
+.a-calendar__top-info, .a-calendar__bottom-info {
+  font-size: 10px;
+  line-height: 14px;
+}
+
+.a-calendar--disabled {
+  opacity: 0.2;
+}
+</style>

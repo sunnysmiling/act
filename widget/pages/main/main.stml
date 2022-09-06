@@ -1,0 +1,268 @@
+<template name="main">
+  <view class="page">
+
+    <safe-area class="header">
+      <text class="logo">ACT</text>
+    </safe-area>
+    <scroll-view class="main" scroll-y>
+      <text class="desc">AVM Component & Template.</text>
+      <view>
+        <text class="title">基础组件</text>
+
+
+        <a-link to="simple-button">
+          <view class="link">
+            <text class="com-name">Button 按钮</text>
+            <a-icon name="arrow-right"/>
+          </view>
+        </a-link>
+
+
+        <a-link to="simple-cell">
+          <view class="link">
+            <text class="com-name">Cell 单元格</text>
+            <a-icon name="arrow-right"/>
+          </view>
+        </a-link>
+
+
+        <a-link to="simple-icon">
+          <view class="link">
+            <text class="com-name">Icon 图标</text>
+            <a-icon name="arrow-right"/>
+          </view>
+        </a-link>
+        <a-link to="simple-iconfont">
+          <view class="link">
+            <text class="com-name">Iconfont 图标解决方案</text>
+            <a-icon name="arrow-right"/>
+          </view>
+        </a-link>
+
+        <view class="link" onClick={_=>api.toast({msg:"该组件请暂时使用引擎提供的基础组件代替"})}>
+          <text class="com-name">Image 图片</text>
+        </view>
+      </view>
+
+      <a-link to="simple-layout">
+        <view class="link">
+          <text class="com-name">Layout 布局</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+      <a-link to="simple-popup">
+        <view class="link">
+          <text class="com-name">Popup 弹出层</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+      <a-link to="simple-toast">
+        <view class="link">
+          <text class="com-name">Toast 轻提示</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+
+      <text class="title">表单组件</text>
+
+      <a-link to="simple-calendar">
+        <view class="link">
+          <text class="com-name">Calendar 日历</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-field">
+        <view class="link">
+          <text class="com-name">Field 输入框</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-search">
+        <view class="link">
+          <text class="com-name">Search 搜索</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-stepper">
+        <view class="link">
+          <text class="com-name">Stepper 步进器</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+
+      <text class="title">展示组件</text>
+      <a-link to="simple-amount">
+        <view class="link">
+          <text class="com-name">Amount 金融数字</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-badge">
+        <view class="link">
+          <text class="com-name">Badge 徽标</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-count-down">
+        <view class="link">
+          <text class="com-name">CountDown 倒计时</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-divider">
+        <view class="link">
+          <text class="com-name">Divider 分割线</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-empty">
+        <view class="link">
+          <text class="com-name">Empty 空状态</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-skeleton">
+        <view class="link">
+          <text class="com-name">Skeleton 骨架屏</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-tag">
+        <view class="link">
+          <text class="com-name">Tag 标签</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+
+      <text class="title">反馈组件</text>
+
+      <a-link to="simple-pull-refresh">
+        <view class="link">
+          <text class="com-name">PullRefresh 下拉刷新</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+      <a-link to="simple-share-sheet">
+        <view class="link">
+          <text class="com-name">ShareSheet 分享面板</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+
+      <text class="title">导航组件</text>
+
+      <a-link to="simple-nav-bar">
+        <view class="link">
+          <text class="com-name">NavBar 导航栏</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+      <a-link to="simple-grid">
+        <view class="link">
+          <text class="com-name">Grid 宫格</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+      <a-link to="simple-tab">
+        <view class="link">
+          <text class="com-name">Tab 标签页</text>
+          <a-icon name="arrow-right"/>
+        </view>
+      </a-link>
+
+      <view style="height: 36px;">
+
+      </view>
+
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+
+import ANavBar from "../../components/act/a-nav-bar";
+import AIcon from "../../components/act/a-icon";
+import ALink from "../../components/act/a-link";
+
+export default {
+  name: "main",
+  components: {ALink, AIcon, ANavBar},
+  installed() {
+    api.setStatusBarStyle && api.setStatusBarStyle({
+      style: 'dark',
+      color: '-'
+    });
+  },
+  methods: {}
+}
+</script>
+
+<style scoped>
+
+.page {
+  height: 100%;
+  background-color: #FFF;
+}
+
+.main {
+  flex: 1;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.header {
+  margin: 0 20px;
+}
+
+.logo {
+  color: #93b920;
+  font-size: 36px;
+  font-weight: 900;
+  font-family: monospace;
+  text-shadow: 0 0 2px #999, -2px 2px 3px #000;
+  margin-top: 20px;
+}
+
+.desc {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+}
+
+
+.title {
+  margin: 24px 0 8px 16px;
+  color: rgba(69, 90, 100, 0.6);
+  font-size: 14px;
+}
+
+.link {
+  flex-flow: row nowrap;
+  margin: 0 0 12px;
+  padding: 0 20px;
+  background: #f7f8fa;
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+  height: 40px;
+  border: 1px solid #f7f8fa;
+  border-radius: 20px;
+  align-items: center;
+}
+
+.com-name {
+  font-size: 14px;
+  line-height: 40px;
+  color: #323233;
+  font-weight: 600;
+  flex: 1;
+}
+</style>

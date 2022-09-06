@@ -1,0 +1,139 @@
+<template name="simple-tag">
+  <view class="page">
+    <a-nav-bar title="simple-tag" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+        <text class="simple-desc">
+          通过 type 属性控制标签颜色。
+        </text>
+
+
+        <a-cell-group round>
+          <a-cell title="默认类型">
+            <template _slot="value">
+              <a-tag>标签</a-tag>
+            </template>
+          </a-cell>
+          <a-cell title="primary 类型">
+            <template _slot="value">
+              <a-tag type="primary">标签</a-tag>
+            </template>
+          </a-cell>
+
+          <a-cell title="success 类型">
+            <template _slot="value">
+              <a-tag type="success">标签</a-tag>
+            </template>
+          </a-cell>
+
+          <a-cell title="danger 类型">
+            <template _slot="value">
+              <a-tag type="danger">标签</a-tag>
+            </template>
+          </a-cell>
+
+          <a-cell title="warning 类型">
+            <template _slot="value">
+              <a-tag type="warning">标签</a-tag>
+            </template>
+          </a-cell>
+        </a-cell-group>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">样式风格</text>
+        <text class="simple-desc">
+          设置 plain 属性设置为空心样式。
+        </text>
+        <text class="simple-desc">通过 round 设置为圆角样式。</text>
+        <text class="simple-desc">通过 mark 设置为标记样式(半圆角)。</text>
+        <text class="simple-desc">添加 closeable 属性表示标签是可关闭的，关闭标签时会触发 close 事件，在 close
+          事件中可以执行隐藏标签的逻辑。
+        </text>
+
+
+        <a-cell-group round>
+          <a-cell title="空心样式 plain">
+            <template _slot="value">
+              <a-tag plain type="primary">标签</a-tag>
+            </template>
+          </a-cell>
+          <a-cell title="空心样式 round">
+            <template _slot="value">
+              <a-tag type="primary" round>标签</a-tag>
+            </template>
+          </a-cell>
+
+          <a-cell title="标记样式 mark">
+            <template _slot="value">
+              <a-tag type="primary" mark>标签</a-tag>
+            </template>
+          </a-cell>
+
+          <a-cell title="可关闭 closeable ">
+            <template _slot="value">
+              <a-tag type="primary" closeable :show="show" @close="close">标签</a-tag>
+            </template>
+          </a-cell>
+
+        </a-cell-group>
+      </view>
+
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import ATag from "../../components/act/a-tag";
+import ACellGroup from "../../components/act/a-cell-group";
+import ACell from "../../components/act/a-cell";
+
+export default {
+  name: "simple-tag",
+  components: {ACell, ACellGroup, ATag, ANavBar},
+  data() {
+    return {
+      show: true
+    }
+  },
+  methods: {
+    close() {
+      this.data.show = false;
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+
+.todo {
+  background: #f1e9d5;
+}
+
+</style>

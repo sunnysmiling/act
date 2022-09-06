@@ -1,0 +1,168 @@
+<template>
+  <view class="page">
+    <a-nav-bar title="simple-tab" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          基本用法 {active[0]}
+        </text>
+
+        <text class="simple-desc">
+          通过 $active 绑定当前激活标签对应的索引值，默认情况下启用第一个标签。
+        </text>
+
+        <a-tabs $active="active[0]">
+          <a-tab title="标签 1">
+            <text>内容 1</text>
+          </a-tab>
+          <a-tab title="标签 2">
+            <text>内容 2</text>
+          </a-tab>
+          <a-tab title="标签 3">
+            <text>内容 3</text>
+          </a-tab>
+          <a-tab title="标签 4">
+            <text>内容 4</text>
+          </a-tab>
+        </a-tabs>
+
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          标签栏滚动
+        </text>
+
+        <text class="simple-desc">
+          标签数量超过 5 个时，标签栏可以在水平方向上滚动，切换时会自动将当前标签居中。
+        </text>
+
+        <a-tabs $active="active[1]">
+          {Array.from({ length:8 },( _ , i ) => i + 1 ).map( i =>
+          <a-tab title={`标签 ${i}`}>
+            <text>内容 {i}</text>
+          </a-tab>
+          )}
+        </a-tabs>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">
+          样式风格
+        </text>
+
+        <text class="simple-desc">
+          Tab 支持两种样式风格：line 和card，默认为 line 样式，可以通过 type 属性切换样式风格。
+        </text>
+
+        <a-tabs type="card" onchange={this.onchange}>
+          <a-tab title="标签 1">
+            <text>内容 1</text>
+          </a-tab>
+          <a-tab title="标签 2">
+            <text>内容 2</text>
+          </a-tab>
+          <a-tab title="标签 3">
+            <text>内容 3</text>
+          </a-tab>
+        </a-tabs>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          异步切换
+        </text>
+
+        <text class="simple-desc">
+          通过 before-change 属性可以在切换标签前执行特定的逻辑。
+        </text>
+
+        <a-tabs :before-change="this.beforeChange">
+          {Array.from({ length:4 },( _ , i ) => i + 1 ).map( i =>
+          <a-tab title={`标签 ${i}`}>
+            <text>内容 {i}</text>
+          </a-tab>
+          )}
+        </a-tabs>
+      </view>
+
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import "../../components/act/a-nav-bar";
+import ATabs from "../../components/act/a-tabs";
+import ATab from "../../components/act/a-tab";
+import Toast from '../../components/act/a-toast';
+
+export default {
+  name: "simple-tab",
+  components: {ATabs, ATab},
+  data() {
+    return {
+      active: [2, 0]
+    }
+  },
+  apiready(){
+    console.log(this)
+    this.active[0] = 3;
+  },
+  methods: {
+    onchange(e) {
+      console.log(JSON.stringify(e))
+    },
+    beforeChange(index) {
+      console.log('beforeChange')
+      // 返回 false 表示阻止此次切换
+      if (index === 1) {
+        return false;
+      }
+
+      // 返回 Promise 来执行异步逻辑
+      return new Promise((resolve) => {
+        // 在 resolve 函数中返回 true 或 false
+
+        Toast.loading({forbidClick: true, message: `正在异步请求`});
+
+        setTimeout(() => {
+          resolve(index !== 3);
+          Toast.clear();
+        }, 1000)
+      });
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+</style>

@@ -1,0 +1,158 @@
+<script>
+import ACell from '../a-cell';
+import AIcon from '../a-icon';
+import {mixedClass, safeProps, syncModel} from "../utils";
+
+export default {
+  name: "a-field",
+  data() {
+    return {
+      value: this.props.value,
+      isFocus: false
+    }
+  },
+  install() {
+    this.render = props => {
+      syncModel.call(this);
+      const {h} = apivm;
+
+
+      if (this.$model.value) {
+        this.data.value = this.$model.value;
+      }
+
+      const inputAlign = this.props['input-align'];
+      const attr = {
+        value: this.data.value,
+        class: mixedClass('a-field__control', {
+          'a-field__control--error': props.error,
+          'a-field__control-center': inputAlign === 'center',
+          'a-field__control-right': inputAlign === 'right'
+        }),
+        onInput: this.handleOnInput,
+        onConfirm: this.handleOnConfirm,
+        placeholder: props.placeholder,
+        type: props.type === 'password' ? 'password' : 'text',
+        'keyboard-type': props.type || 'default',
+        'confirm-type': props['confirm-type'] || 'done',
+        onfocus: this.handleOnFocus,
+        onblur: this.handleOnBlur,
+        maxlength: props.maxlength || false,
+      }
+      if (props.autofocus) {
+        attr.autofocus = true;
+      }
+
+      if (props.type === 'password') { //安卓端支持
+        delete attr['keyboard-type']
+      }
+
+      if (props.readonly) {
+        attr.readonly = true;
+        if (api.systemType === 'android') {
+          attr.disabled = true;
+        }
+      }
+
+      if (props.disabled) {
+        attr.disabled = true;
+      }
+      if (props.colon) {
+        props.label += ' :';
+      }
+
+      return h(ACell, {
+            ...safeProps(props),
+            title: props.label,
+            label: '',
+            class: mixedClass(`a-field ${props.class || ''} `, {
+              'a-field--disabled': props.disabled
+            }),
+            icon: props['left-icon'],
+            style: `${props.style || ''} `,
+            'label-width': props['label-width'] || 88,
+            'label-align': props['label-align'] || 'left'
+          },
+          h('template', {class: 'a-field__body', _slot: 'value'},
+              h('input', attr),
+              props['error-message'] && h('text', {class: `a-field__error-msg`}, props['error-message'])
+          ),
+          (props['clearable'] && this.data.value && (api.systemType==='android'||this.data.isFocus) && h('template', {
+            _slot: 'right-icon',
+            onClick: _ => this.onClear(_)
+          }, h(AIcon, {
+            name: 'delete-filling', color: '#c8c9cc'
+          }))) || (props['right-icon'] && h('template', {_slot: 'right-icon'}, h(AIcon, {
+            name: props['right-icon']
+          }))),
+          props.children
+      );
+    }
+  },
+  handleOnInput({detail: {value}}) {
+    if (!this.props.readonly) {
+      this.setValue(value, 'input');
+    }
+  },
+  handleOnConfirm(e) {
+    this.fire('confirm', e.detail);
+  },
+  onClear(_) {
+    this.setValue('', 'clear');
+  },
+  handleOnFocus(_) {
+    this.data.isFocus = true;
+    this.fire('focus', _);
+  },
+  handleOnBlur(_) {
+    this.data.isFocus = false;
+    this.fire('blur', _);
+  },
+  setValue(value, type) {
+    this.$model.value = value;
+    this.fire(type, {value});
+    this.data.value = value;
+  }
+}
+</script>
+
+<style scoped>
+.a-field__body {
+  flex: 1;
+}
+
+.a-field__control {
+  display: block;
+  box-sizing: border-box;
+  color: #323233;
+  border: none;
+  font-size: 14px;
+  height: 24px;
+  line-height: 24px;
+  width: 100%;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+.a-field--disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.a-field__control-center {
+  text-align: center;
+}
+
+.a-field__control-right {
+  text-align: right;
+}
+
+.a-field__control--error {
+  color: #ee0a24;
+}
+
+.a-field__error-msg {
+  color: #ee0a24;
+  font-size: 12px;
+}
+</style>

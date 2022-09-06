@@ -1,0 +1,63 @@
+<script>
+
+export default {
+  name: "a-icon",
+  install() {
+
+    console.log('[a-icon提示]:本组件是一个临时过渡方案。现在已经有更成熟、更自由、性能更好的 [a-iconfont] 方案。\n' +
+        '          本组件是基于后端渲染实现，线上服务将于 2022 年 12 月 31 日 停止。 项目中有使用到的建议迁移到[a-iconfont] 组件，或者后端私有部署。\n' +
+        '          私有部署源码参考：https://github.com/YangYongAn/icon.yangyongan.com')
+
+    this.render = props => {
+      if (!props.size) props.size = 16;
+      if (!props.scale) props.scale = 2;//2倍缩放 适配高分屏
+      if (!props.color) {
+        props.color = '#666';
+      }
+      props.color = props.color.replace('#', '_');
+
+
+      const isImage = props.name.includes('/');
+
+      const src = isImage ? props.name : `http://icon.yangyongan.com/?name=${props.name}&color=${props.color}&size=${props.size}&scale=${props.scale}`;
+
+      const {h} = apivm;
+
+      const renderIcon = h('img', {
+        ...props,
+        class: `a-icon a-icon__${isImage ? 'image' : props.name} ${props.class || ''}`,
+        style: `width:${props.size}px;height:${props.size}px;${props.style || ''}`, src
+      });
+
+      if (props.dot) {
+
+        return h('view', {
+          class: 'a-icon__wrapper a-icon__dot',
+        }, renderIcon, h('view', {class: 'a-icon__dot'}))
+
+      } else if (props.badge) {
+        return h('view', {
+          class: 'a-icon__wrapper a-icon__badge',
+        }, renderIcon)
+      } else {
+        return renderIcon;
+      }
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-icon {
+  align-self: center;
+}
+
+.a-icon__dot {
+  width: 8px;
+  min-width: 0;
+  height: 8px;
+  background-color: #ee0a24;
+  border-radius: 100%;
+}
+</style>

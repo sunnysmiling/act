@@ -1,0 +1,348 @@
+<html>
+<script> var _avm_root_config={"name":"root","tabBar":{"frames":[{"title":"组件","name":"main","url":"../main/main.stml"},{"title":"拓展","name":"extend","url":"../extend/extend.stml"},{"title":"模板","name":"template","url":"../template/template.stml"}],"list":[{"text":"组件","iconPath":"../../image/icon__tab--component-0.png","selectedIconPath":"../../image/icon__tab--component-1.png"},{"text":"拓展","iconPath":"../../image/icon__tab--extend-0.png","selectedIconPath":"../../image/icon__tab--extend-1.png"},{"text":"模板","iconPath":"../../image/icon__tab--template-0.png","selectedIconPath":"../../image/icon__tab--template-1.png"}],"color":"#666","selectedColor":"#3a6","animated":false,"scrollEnabled":false,"preload":2},"appName":"ACT"}</script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <style>
+    	html,body{
+			margin:0px;
+			padding:0px;
+			height:100%;
+			background:transparent;
+			display: -webkit-flex;
+			flex-direction:column;
+			justify-content:flex-start;
+			align-items:stretch;
+			flex-wrap:nowrap;
+			align-content:stretch;
+			-webkit-touch-callout:none;
+			-webkit-text-size-adjust:none;
+			-webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+			-webkit-user-select:none;
+		}
+
+		div,view,swiper-item,list-header,list-footer,cell,label,ul,li{
+			display: -webkit-flex;
+			flex-direction:column;
+			justify-content:flex-start;
+			align-items:stretch;
+			flex-wrap:nowrap;
+			align-content:stretch;
+			position:relative;
+			box-sizing: border-box;
+		}
+		label{
+			flex-direction:row;
+		}
+		ul,li{
+			padding:0px;
+			margin:0px;
+			list-style:none;
+		}
+		img{
+			border:none;
+		}
+		button{
+			outline: none;
+			border: 1px solid #dfdfdf;
+		    border-radius: 4px;
+		    padding: 6px 20px;
+		    color: black;
+		    text-align: center;
+		    background: #f8f8f8;
+		}
+		input {
+			outline: none;
+			border: 1px solid #dfdfdf;
+		    background: #fff;
+		    width: 160px;
+		    height: 31px;
+		}
+		textarea {
+			border: 1px solid #dfdfdf;
+			background: #fff;
+			width: 160px;
+			height: 40px;
+		}
+		progress {
+			width: 160px;
+			height: 6px;
+		}
+		checkbox {
+			color: #006bff;
+			width: 25px;
+			height: 25px;
+		}
+		radio {
+			color: #006bff;
+			width: 25px;
+			height: 25px;
+		}
+		slider {
+			width: 160px;
+			height: 31px;
+		}
+		switch {
+			width: 51px;
+			height: 31px;
+		}
+		dialog{
+			border: 1px solid #ccc;
+			background-color:#fff;
+			padding:0px;
+		}
+		dialog::backdrop{
+			background-color: rgba(0, 0, 0, 0.6);
+		}
+    </style>
+    <style>
+    	.avm-hide{
+    		display: none!important;
+    	}
+    	.avm-iframe{
+    		position: absolute;
+    		height: 100%;
+    		width: 100%;
+    		background-color: white;
+    	}
+    	.avm-iframe-frame{
+			background-color: transparent;
+			z-index: 9999;
+    	}
+    	.avm-win-tabbar{
+    		height: 100%;
+    		flex: 1;
+    		-webkit-flex: 1;
+    	}
+    	.avm-win-tabbar__page{
+    		flex: 1;
+    		-webkit-flex: 1;
+    		position: relative;
+    	}
+    	.avm-win-tabbar__footer{
+    		display: flex;
+    		display: -webkit-flex;
+    		flex-direction: row;
+    		-webkit-flex-direction: row;
+    		border-top: 1px solid #eee;
+    	}
+    	
+    	.avm-win-tabbar__item{
+			flex: 1;
+			-webkit-flex: 1;
+			display: inline-block;
+			text-align: center;
+			padding: 8px 0 4px;
+    	}
+
+    	.avm-win-tabbar__img-wrap{
+    		width: 28px;
+    		height: 28px;
+    		margin-bottom: 2px;
+    		position: relative;
+    		display: inline-block;
+    	}	
+    	.avm-win-tabbar__img,.avm-win-tabbar__selectimg{
+    		width: 100%;
+    		height: 100%;
+    	}
+
+    	.avm-win-tabbar__selectimg{
+    		visibility: hidden;
+    		position: absolute;
+    	}
+		.avm-win-tabbar__item-active .avm-win-tabbar__img{
+			visibility: hidden;
+		}
+		.avm-win-tabbar__item-active .avm-win-tabbar__selectimg{
+			visibility: visible;
+			top: 0;
+			left: 0;
+		}
+    	.avm-win-tabbar__text{
+    		color: #999;
+		    font-size: 10px;
+		    line-height: 1.4
+    	}
+    	.avm-win-tabbar__item-active > .avm-win-tabbar__text{
+    		color: #333;
+    	}
+
+		.avm-navigation-bar{
+			height: 44px;
+			position: relative;
+		}
+		.avm-navigation-bar__left{
+    		position: absolute;
+    		left: 16px;
+    		display: flex;
+    		display: -webkit-flex;
+		    -webkit-flex-direction: row;
+		    flex-direction: row;
+		    align-items: center;
+		    -webkit-align-items: center;
+		    height: 100%;
+		}
+    	.avm-navigation-bar__back{
+    		width: 44px;
+		    height: 44px;
+		    background-size: 16px;
+		    background-repeat: no-repeat;
+		    background-position: 0 center;
+		    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='24' viewBox='0 0 12 24'%3E  %3Cpath fill-opacity='.9' fill-rule='evenodd' d='M10 19.438L8.955 20.5l-7.666-7.79a1.02 1.02 0 0 1 0-1.42L8.955 3.5 10 4.563 2.682 12 10 19.438z'/%3E%3C/svg%3E");
+    	}
+    	.avm-navigation-bar__title{
+    		font-size: inherit;
+    		line-height: 44px;
+    		width: 70%;
+    		margin: auto;
+    		white-space: nowrap;
+    		text-overflow: ellipsis;
+    		text-align: center;
+    		overflow: hidden;
+    	}
+    </style>
+</head>
+<body>
+	
+</body>
+<script src="../../script/avm.min.js"></script>
+<script>
+	!function(){
+        var _avm_root_tabbar = _avm_root_config.tabBar;
+
+  		if(window === window.top){//在win中，否则就在iframe中
+  			if(!window.history.state){
+				window.history.replaceState({ct:Date.now(),$routerArr:[]},null);
+			}
+			insterFrame($route)
+			//以上只有在第一次进入时会触发，刷新等同于第一次进入也会触发（刷新只是多了些历史状态）
+
+  			window.addEventListener('popstate', function (e) {
+  				$route = api._getRoute();
+  				if(!!_avm_root_tabbar && $route.name == 'root'){
+  					var rootPage = document.getElementsByClassName('avm-win-tabbar')[0];
+  					if(!rootPage){
+  						if( _avmState.ct > e.state.ct ){ //后退，移除当前显示的页面
+  							var curShowFrame = window.frames[window.frames.length-1];
+		            		removeFrame(curShowFrame.name)
+		            	}else{//前进
+
+		            	}
+  						insterFrame($route)
+  					}else{
+  						while(rootPage.nextElementSibling && rootPage.nextElementSibling.name){
+  							removeFrame(rootPage.nextElementSibling.name)
+						}
+						var tabbarDom = top.document.getElementsByClassName('avm-win-tabbar__item-active')[0];
+						if(tabbarDom){
+		  					var _curBarIndex = tabbarDom.dataset.index
+			  				if(_curBarIndex !=-1 ){
+				  				var barIframe = top.document.querySelector('.avm-win-tabbar__page__'+_curBarIndex);
+				  				$rootvm = barIframe.contentWindow.$document.$rootvm;
+				  				$rootvm.onShow && $rootvm.onShow()
+			  				}
+						}
+  					}
+  					window._avmState = e.state;
+  				}else if(window.frames[$route.name]){// frame堆栈中存在要打开的页面，进入此判断，会发生在点击浏览器后退
+	            	for(var i=window.frames.length-1; i>=0; i--){
+	            		//从frame堆栈，由往向内检索，将页面以外的页面移除，显示出需要打开的页面
+	            		if(window.frames[i] !== window.frames[$route.name]){
+	            			removeFrame(window.frames[i].name);
+	            		}else{//找到页面，停止检索
+	            			break;
+	            		}
+	            	}
+	            	window._avmState = e.state;//记录当前state，当触发前进后退时，用来和最新的比较ct（创建时间）
+	            	if(window.frames[$route.name].$document.$rootvm.onShow){
+						window.frames[$route.name].$document.$rootvm.onShow();
+					}
+	            }else{// frame堆栈中没有要打开的页面，进入此判断，是在浏览器点击刷新后的导致frame堆栈不存在，然后点击浏览器前进后退，或单纯的点击浏览器前进时。
+	            	var curShowFrame = window.frames[window.frames.length-1];
+	            	if( _avmState.ct > e.state.ct ){ //后退，移除当前显示的页面
+	            		removeFrame(curShowFrame.name)
+	            	}else{//前进
+
+	            	}
+	            	insterFrame($route)
+	            }
+	        })
+  		}else{//在iframe中
+  			var pages = top._avmState.$routerArr;
+  			if(pages.length > 1){
+  				var $rootvm = {};
+  				var prevPage = pages[pages.length-2];
+				if(prevPage == 'root' && !!_avm_root_tabbar){
+					var tabbarDom = top.document.getElementsByClassName('avm-win-tabbar__item-active')[0];
+					if(tabbarDom){
+  					var _curBarIndex = tabbarDom.dataset.index
+	  				if(_curBarIndex!=-1){
+		  				var barIframe = top.document.querySelector('.avm-win-tabbar__page__'+_curBarIndex);
+		  				$rootvm = barIframe.contentWindow.$document.$rootvm;
+	  				}
+					}
+				}else if(top.frames[prevPage]){
+					$rootvm = top.frames[prevPage].$document.$rootvm
+				}
+  				$rootvm.onHide && $rootvm.onHide()
+  			}
+  			
+  			if($route.navigationBar){
+  				api._setNavigationBar({title:$route.title, navigationBar:$route.navigationBar})
+  			}
+  			
+			var fileName = $route.url.split('/').pop();
+			if( fileName.indexOf('.') == -1 ){
+  				var pageUrl = $route.url
+  			}else{
+				var pageUrl = $route.url.substr(0,$route.url.lastIndexOf('.'));
+  			}
+		  	var scriptStr = "<script src='"+pageUrl+".js'><\/script>";
+	  		document.write(scriptStr);
+
+		  	window.onload = function(){
+				api$__vm.$_start()
+				if($document.$rootvm.onShow){
+					$document.$rootvm.onShow();
+				}
+				if($route.navigationBar){
+					var rootEl = $document.$rootvm.base;
+					rootEl.style['overflow-y'] = 'scroll';
+					rootEl.style['flex'] = 1;
+					rootEl.style['-webkit-flex'] = 1;
+				}
+		  	}
+  		}
+
+  		function removeFrame(name){
+  			document.body.removeChild(document.querySelector('iframe[name='+name+']'));
+  		}
+  		function insterFrame(params){
+  			//更新state中的$routerArr, $routerArr记录了页面顺序，当点击浏览器刷新后，frame堆栈消失，可以利用其前进后退，以及关闭至指定页面（closeToWin）
+  			var state = JSON.parse(JSON.stringify(history.state));
+  			var length = state.$routerArr.length;
+  			var lastRouter = state.$routerArr[length-1];
+  			if(!lastRouter || lastRouter !== $route.name){ //$routerArr中记录的最后一个页面，与当前页面比较，不同的话记录到$routerArr
+  				state.$routerArr.push($route.name);
+  				history.replaceState(state,null);
+  			}
+  			window._avmState = state;
+
+  			if(params.name == 'root'){
+  				if(!!_avm_root_tabbar){
+  					api._loadTabbar();
+  					return
+  				}else if(!!_avm_root_config.rootPage){
+  					params.url = _avm_root_config.rootPage
+  				}
+  			}
+			api._insertIframe(params, window.parent.window.document.body)
+  		}
+
+	}()
+
+</script>
+
+</html>

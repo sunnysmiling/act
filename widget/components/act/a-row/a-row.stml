@@ -1,0 +1,81 @@
+<script>
+export default {
+  name: "a-row",
+  install() {
+    this.render = props => {
+      const {h, extractClass} = apivm;
+
+      const groups = [[]];
+
+      let totalSpan = 0;
+      props.children.forEach((child, index) => {
+        totalSpan += child.attributes ? Number(child.attributes.span) : 0;
+
+        if (totalSpan > 24) {
+          groups.push([index]);
+          totalSpan -= 24;
+        } else {
+          groups[groups.length - 1].push(index);
+        }
+      });
+
+
+      const gutter = Number(props.gutter);
+      const spaces = [];
+
+      if (gutter) {
+        groups.forEach((group) => {
+          const averagePadding = (gutter * (group.length - 1)) / group.length;
+          group.forEach((item, index) => {
+            if (index === 0) {
+              spaces.push({right: averagePadding});
+              props.children[item].attributes.style = `padding-right:${averagePadding}px`;
+            } else {
+              const left = gutter - spaces[item - 1].right;
+              const right = averagePadding - left;
+              spaces.push({left, right});
+              props.children[item].attributes.style = `padding-left:${left}px;padding-right:${right}px`;
+            }
+          });
+        });
+      }
+      return h('view', {
+        ...extractClass(props, 'a-row', {
+          [`a-row--justify-${props.justify}`]: true
+        }),
+        style: `${props.style || ''}`
+      }, props.children)
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-row {
+  flex-flow: row wrap;
+}
+
+.a-row--justify-center {
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.a-row--justify-end {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.a-row--justify-space-between {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+.a-row--justify-space-around {
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+</style>

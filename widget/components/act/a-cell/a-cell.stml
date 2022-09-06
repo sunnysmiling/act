@@ -1,0 +1,184 @@
+<script>
+import {linkTo, mixedClass, slotSupport} from "../utils";
+import AIcon from "../a-icon";
+
+export default {
+  name: "a-cell",
+
+  install() {
+    this.render = props => {
+      const {h} = apivm;
+
+      const isLarge = props.size === 'large' || props.large;
+      const isField = props.class && props.class.includes('a-field');
+
+      (Array.isArray(props.children) && props.children.length === 1 && typeof props.children[0] === 'string') && (props.title = props.children);
+
+
+      const attr = {
+        ...props,
+        class: mixedClass(`a-cell a-cell__root ${props.class || ''} ${props.__last ? 'a-cell__-last' : 'a-cell__-not-last'}`, {
+          'a-cell--large': isLarge,
+          'a-cell--center': props.center,
+          'a-cell__root-not-from-search': props.class && props.class.indexOf('form-search') === -1
+        }),
+        style: props.style
+      }
+
+      // if (!this._host['a-swipe-cell']) {
+      //   attr.onClick = this.cellClick
+      // }
+
+
+      if (props.url) {
+        attr.onClick = () => linkTo(props.url, props.title);
+      } else if (props.to) {
+        attr.onClick = () => linkTo(props.to, props.title);
+      }
+
+      return slotSupport(h('view', attr,
+          props.required && h('text', {class: 'a-field__required'}, '*'),
+          props.icon && h(AIcon, {name: props.icon, class: 'a-cell__left-icon'}),
+          props.title
+              ? h('view', {
+                    class: 'a-cell__title',
+                    style: `${isField ? ('width:' + (props['label-width'] || 88) + 'px;text-align:' + props['label-align']) : 'flex:1;'}`,
+                  }, h('text', {
+                    class: mixedClass('a-cell__title-text', {
+                      'a-cell__title-text--large': isLarge
+                    }),
+                    _slot: "title",
+                  }, props.title),
+                  props.label && h('text', {
+                    class: mixedClass('a-cell__label', {
+                      'a-cell__label--large': isLarge
+                    })
+                  }, props.label))
+              :
+              isField ? null : h('view', {
+                class: 'a-cell__title',
+                style: ' flex-direction: row;flex:1;',
+                _slot: 'title'
+              }),
+          h('text', {
+            class: mixedClass('a-cell__value', {
+              'a-cell__value--alone': !props.title
+            })
+          }, props.value),
+
+          h('view', {
+            _slot: "value"
+          }),
+
+          props['is-link'] ? h(AIcon, {
+                name: props['arrow-direction'] ? `arrow-${props['arrow-direction']}` : 'arrow-right',
+                class: 'a-cell__right-icon',
+                _slot: 'right-icon'
+              }) :
+              h('view', {class: 'a-cell__value', style: 'justify-content: center;', _slot: 'right-icon'})
+          ,
+
+          h('view', {
+            class: 'a-field__button',
+            _slot: "button"
+          }),
+      ), props.children);
+    }
+  },
+  // cellClick(e) {
+  //   console.log('cell-click')
+  //   this.fire('click', e);
+  //   if (this.props.url) {
+  //     linkTo(this.props.url, this.props.title);
+  //   } else if (this.props.to) {
+  //     linkTo(this.props.to, this.props.title);
+  //   } else {
+  //     this.props.onClick && this.props.onClick(e);
+  //   }
+  // },
+}
+</script>
+
+<style scoped>
+/*写 .a-cell__root 是为了兼容安卓 */
+.a-cell, .a-cell__root {
+  flex-direction: row;
+  padding: 10px 16px;
+  line-height: 24px;
+}
+
+.a-cell__root--not-from-search {
+  background: #fff;
+}
+
+.a-cell--large {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.a-cell--center {
+  align-items: center;
+}
+
+.a-cell__left-icon {
+  margin-right: 4px;
+}
+
+.a-cell__right-icon {
+  margin-left: 4px;
+}
+
+.a-cell__-not-last {
+  border-bottom: 1px solid #f5f4f4;
+}
+
+.a-cell__title {
+  color: #323233;
+}
+
+/*注意文本不会继承行高 所以不会自动撑起高度*/
+.a-cell__title-text {
+  font-size: 14px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.a-cell__title-text--large {
+  font-size: 16px;
+}
+
+.a-cell__label {
+  margin-top: 4px;
+  color: #969799;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.a-cell__label--large {
+  font-size: 14px;
+}
+
+/*写后面的表达式是为了兼容web和小程序*/
+.a-cell__value--alone, .a-cell__value.a-cell__value--alone {
+  color: #323233;
+  height: 24px;
+  line-height: 24px;
+}
+
+.a-cell__value {
+  font-size: 14px;
+  color: #969799;
+  height: 24px;
+  line-height: 24px;
+}
+
+.a-field__required {
+  color: red;
+  align-self: flex-start;
+}
+
+
+.a-field__button {
+  margin-left: 6px;
+}
+</style>

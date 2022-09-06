@@ -1,0 +1,142 @@
+<script>
+import AIcon from "../a-icon";
+import {syncModel} from "../utils";
+
+export default {
+  name: "a-popup",
+  install() {
+
+    syncModel.call(this);
+
+
+    this.render = props => {
+      const {h, extractClass} = apivm;
+      return this.$model.show ? h('view', {
+            ...extractClass(props, `a-popup__overlay`),
+            onClick: _ => this.handleClose(_, 'overlay')
+          },
+          h('view', {
+            ...extractClass(props, `a-popup  a-popup--position-${props.position || 'center'}`, {
+              [`a-popup--round-${props.position || 'center'}`]: props.round
+            }),
+            style: `${props.style}||''`,
+          }, props.children, props.closeable && h(AIcon, {
+            name: props['close-icon'] || 'close',
+            size: 22,
+            color: props['close-icon-color'] || '#c8c9cc',
+            class: `a-popup__close a-popup__close--${props['close-icon-position'] || 'top-right'}`,
+            onClick: _ => this.handleClose(_, 'icon')
+          }))
+      ) : h('text', {display: 'none'}, '');
+    }
+  },
+  handleClose(ev, type) {
+    ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
+    this.$model.show = false;
+    this.fire('close', {type});
+  }
+}
+</script>
+
+<style scoped>
+.a-popup__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /*transition: background-color 0.3s;*/
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.a-popup--state-0 {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.a-popup--state-1 {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.a-popup {
+  position: absolute;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: #fff;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+  -webkit-overflow-scrolling: touch;
+}
+
+.a-popup--position-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.a-popup--position-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.a-popup--position-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.a-popup--position-left {
+  left: 0;
+}
+
+.a-popup--position-right {
+  right: 0;
+}
+
+
+.a-popup__close {
+  position: absolute;
+}
+
+.a-popup__close--top-left {
+  top: 16px;
+  left: 16px;
+}
+
+.a-popup__close--top-right {
+  top: 16px;
+  right: 16px;
+}
+
+.a-popup__close--bottom-left {
+  bottom: 16px;
+  left: 16px;
+}
+
+.a-popup__close--bottom-right {
+  bottom: 16px;
+  right: 16px;
+}
+
+.a-popup--round-center {
+  border-radius: 16px;
+}
+
+.a-popup--round-top {
+  border-radius: 0 0 16px 16px;
+}
+
+.a-popup--round-bottom {
+  border-radius: 16px 16px 0 0;
+}
+
+.a-popup--round-left {
+  border-radius: 0 16px 16px 0;
+}
+
+.a-popup--round-right {
+  border-radius: 16px 0 0 16px;
+}
+
+
+</style>

@@ -1,0 +1,55 @@
+<script>
+import {slotSupport} from "../utils";
+
+export default {
+  name: "a-swipe-cell",
+  install() {
+    this.render = props => {
+      const {h} = apivm;
+      return slotSupport(h('view', {
+            class: `a-swipe-cell ${props.class || ''}`,
+            style: `${props.style || ''}`
+          },
+          h('view', {
+            _slot: 'left',
+            class: 'a-swipe-cell__left',
+          }),
+
+          h('view', {
+            _slot: 'default',
+            class: 'a-swipe-cell__default',
+            ontouchmove() {
+              console.log(22)
+            }
+          }),
+
+
+          h('view', {
+            _slot: 'right',
+            class: 'a-swipe-cell__right'
+          })
+          ),
+          props.children
+      );
+    }
+  },
+  ontouchmove(e) {
+    console.log(e)
+  }
+}
+</script>
+
+<style scoped>
+.a-swipe-cell {
+  flex-flow: row nowrap;
+}
+
+.a-swipe-cell__left, .a-swipe-cell__right {
+  flex-flow: row nowrap;
+  position: absolute;
+}
+
+.a-swipe-cell__default {
+  width: 80%;
+}
+</style>

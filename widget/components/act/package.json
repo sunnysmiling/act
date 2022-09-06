@@ -1,0 +1,16 @@
+{
+  "name": "act",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "index.js",
+  "scripts": {
+    "iconfont": "node a-iconfont/build.js",
+    "docs": "node utils/build-docs.js"
+  },
+  "keywords": [],
+  "author": "APICloud",
+  "license": "MIT",
+  "dependencies": {
+    "mark-to-jsonml": "^0.5.0"
+  }
+}

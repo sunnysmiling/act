@@ -1,0 +1,137 @@
+<template>
+	{slotSupport(
+	<refresh class={this.props.class||''} style={`height:${headHeight}px;${this.props.style||''}`}
+		threshold={this.props['pull-distance']||headHeight} state={shouldLoading?'refreshing':'normal'}
+		@statechange="onStateChange" @pulling="onPulling">
+		<view class="a-pull-refresh-head" style={`height:${headHeight}px;`}>
+      <view _slot={status}/>
+			<view v-if={!haveSlot(status, this.props)} class="a-pull-refresh-head-default">
+				<image v-if={this.$model.refreshing} class="a-pull-refresh-loading-img" src={loadingImg} />
+				<text class="a-pull-refresh-text">{refreshStateDesc}</text>
+			</view>
+		</view>
+	</refresh>
+	, this.props.children)
+	}
+</template>
+
+<script>
+import { syncModel, slotSupport, haveSlot } from "../utils/index";
+
+export default {
+	name: "a-pull-refresh",
+	data() {
+		return {
+      status: 'normal',
+			refreshState: 'normal',
+      distance: 0,
+      showSuccess: false,
+      loadingImg: 'https://docs.apicloud.com/act/img/loading.gif',
+      desc: {
+        pullingText: '下拉即可刷新...',
+        loosingText: '释放即可刷新...',
+        loadingText: '加载中...',
+      }
+		}
+	},
+	computed: {
+		headHeight() {
+			return this.props['head-height'] || 50;
+		},
+    shouldLoading() {
+      if (this.$model && this.$model.refreshing) {
+        return true;
+      }
+      if (this.data.refreshState == 'refreshing' && this.props['success-text']) {
+        this.data.showSuccess = true;
+        let duration = this.props['success-duration'];
+        setTimeout(()=>{
+          this.data.refreshState = 'normal';
+          this.data.showSuccess = false;
+        }, (duration && parseInt(duration)) || 500);
+        return true;
+      }
+      return false;
+    },
+		refreshStateDesc() {
+      let refreshState = this.data.refreshState;
+			if (refreshState == 'normal') {
+        if (this.data.distance == 0) {
+          return '';
+        }
+				return this.props['pulling-text'] || this.data.desc.pullingText;
+			} else if (refreshState == 'dragging') {
+				return this.props['loosing-text'] || this.data.desc.loosingText;
+			} else if (refreshState == 'refreshing') {
+        if (this.data.showSuccess) {
+          return this.props['success-text'] || '';
+        }
+				return this.props['loading-text'] || this.data.desc.loadingText;
+			}
+		},
+    status() {
+      let refreshState = this.data.refreshState;
+			if (refreshState == 'normal') {
+        if (this.data.distance == 0) {
+          return 'normal';
+        }
+				return 'pulling';
+			} else if (refreshState == 'dragging') {
+				return 'loosing';
+			} else if (refreshState == 'refreshing') {
+        if (this.data.showSuccess) {
+          return 'success';
+        }
+				return 'loading';
+			}
+    }
+	},
+	methods: {
+		onStateChange(e) {
+      let state = e.detail.state;
+      if (state == 'refreshing') {
+        this.$model.refreshing = true;
+        this.data.refreshState = state;
+        this.fire('refresh', {});
+        return;
+      }
+      this.data.refreshState = state;
+		},
+		onPulling(e) {
+      this.data.distance = e.detail.distance;
+      this.fire('pulling', e.detail);
+		},
+    beforeRender() {
+      if (!this.$model) {
+        syncModel.call(this);
+      }
+    }
+	}
+}
+</script>
+
+<style scoped>
+.a-pull-refresh-head {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	overflow: hidden;
+	user-select: none;
+}
+.a-pull-refresh-head-default {
+  flex-direction: row;
+  align-items: center;
+  margin: auto;
+}
+.a-pull-refresh-text {
+  color: #969799;
+  font-size: 14px;
+}
+.a-pull-refresh-loading-img {
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+}
+</style>

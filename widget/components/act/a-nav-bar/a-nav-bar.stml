@@ -1,0 +1,123 @@
+<template name="a-nav-bar">
+  superNode(
+  <safe-area :class="`a-nav-bar${!this.props['hide-line']?' a-nav-bar--line':''}`">
+    <view class="a-nav-bar__content" :style="`height: ${this.props['height']||46}px`">
+
+      <view v-if="this.props['left-arrow']" class="a-nav-bar__click-warp a-nav-bar__left" _slot="left" @click="leftClick">
+        {
+        this.props['left-arrow'] &&
+        <a-icon name="arrow-left" class="a-nav-bar__icon" color="#333"/>
+        }
+        {
+        this.props['left-text'] &&
+        <text class="a-nav-bar__text">{this.props['left-text']}</text>
+        }
+      </view>
+
+      <text class="a-nav-bar__title"
+            :style="`font-size: ${this.props['title-size']||16}px;color: ${this.props['title-color']||'#000'};`"
+            @click="titleClick">
+        {this.props['title']}
+      </text>
+
+
+      <view class="a-nav-bar__click-warp a-nav-bar__right" _slot="right" @click="rightClick">
+        <text class="a-nav-bar__text">{this.props['right-text']}</text>
+      </view>
+
+
+    </view>
+  </safe-area>
+  , this.props)
+</template>
+
+<script>
+
+import AIcon from "../a-icon";
+import {superNode} from "../utils";
+
+export default {
+  name: "a-nav-bar",
+  components: {AIcon},
+  install() {
+    api.setStatusBarStyle && api.setStatusBarStyle({
+      style: 'dark', color: '-'
+    });
+  },
+  methods: {
+    leftClick(ev) {
+      ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
+      if (this.props['onClick-left']) {
+        this.fire('click-left', ev);
+      } else {
+        api.closeWin();
+      }
+    },
+    rightClick(ev) {
+      ev.stopPropagation ? ev.stopPropagation() : ev.cancelBubble = true;
+      this.fire('click-right', ev);
+    },
+    titleClick(ev) {
+      this.fire('title-right', ev);
+    }
+  }
+}
+
+</script>
+
+<style scoped>
+
+.a-nav-bar {
+  background-color: #fff;
+}
+
+.a-nav-bar--line {
+  box-shadow: 1px 1px 1px #e6e6e6;
+  margin-bottom: 2px;
+}
+
+.a-nav-bar__content {
+  flex-flow: row nowrap;
+}
+
+
+.a-nav-bar__click-warp {
+  position: absolute;
+  height: 100%;
+  flex-flow: row nowrap;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 99;
+}
+
+.a-nav-bar__left {
+  left: 0;
+}
+
+.a-nav-bar__right {
+  right: 0;
+}
+
+.a-nav-bar__text {
+  color: #333;
+  font-size: 14px;
+}
+
+.a-nav-bar__icon {
+  height: 16px;
+  width: 16px;
+}
+
+.a-nav-bar__title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  align-self: center;
+  text-align: center;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

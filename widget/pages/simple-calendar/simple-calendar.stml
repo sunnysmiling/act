@@ -1,0 +1,281 @@
+<template name="simple-calendar">
+  <view class="page">
+    <a-nav-bar title="simple-calendar" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          选择单个日期
+        </text>
+        <text class="simple-desc">
+          下面演示了结合单元格来使用日历组件的用法，日期选择完成后会触发 confirm 事件。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(0)" title="选择单个日期" :value="value[0]"/>
+        </a-cell-group>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">
+          双向绑定
+        </text>
+        <text class="simple-desc">
+          下面演示了使用 $default-date 来做双向绑定，自动接管数据变化绑定。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(1)" title="选择单个日期" :value="value[1]"/>
+        </a-cell-group>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          选择多个日期
+        </text>
+        <text class="simple-desc">
+          设置 type 为 multiple 后可以选择多个日期，此时 confirm 事件返回的 date 为数组结构，数组包含若干个选中的日期。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(2)" title="选择多个日期" :value="value[2]"/>
+        </a-cell-group>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">
+          选择日期区间
+        </text>
+        <text class="simple-desc">
+          设置 type 为 range 后可以选择日期区间，此时 confirm 事件返回的 date 为数组结构，数组第一项为开始时间，第二项为结束时间。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(3)" title="选择日期区间" :value="value[3]"/>
+        </a-cell-group>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          快捷选择
+        </text>
+        <text class="simple-desc">
+          将 show-confirm 设置为 false 可以隐藏确认按钮，这种情况下选择完成后会立即触发 confirm 事件。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(4)" title="快捷选择" :value="value[4]"/>
+          <a-cell is-link @click="choose(5)" title="快捷选择范围" :value="value[5]"/>
+        </a-cell-group>
+      </view>
+
+
+      <view class="simple todo">
+        <text class="simple-title">
+          自定义颜色
+        </text>
+        <text class="simple-desc">
+          通过 color 属性可以自定义日历的颜色，对选中日期和底部按钮生效。
+        </text>
+
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">
+          自定义日期范围
+        </text>
+        <text class="simple-desc">
+          通过 min-date 和 max-date 定义日历的范围。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(7)" title="自定义日期范围" :value="value[7]"/>
+        </a-cell-group>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          自定义按钮文字
+        </text>
+        <text class="simple-desc">
+          通过 confirm-text 设置按钮文字，通过 confirm-disabled-text 设置按钮禁用时的文字。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(8)" title="自定义按钮文字" :value="value[8]"/>
+        </a-cell-group>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">
+          自定义日期文案
+        </text>
+        <text class="simple-desc">
+          通过传入 formatter 函数来对日历上每一格的内容进行格式化。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(9)" title="自定义日期文案" :value="value[9]"/>
+        </a-cell-group>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">
+          日期区间最大范围
+        </text>
+        <text class="simple-desc">
+          选择日期区间时，可以通过 max-range 属性来指定最多可选天数，选择的范围超过最多可选天数时，会弹出相应的提示文案。
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="choose(10)" title="日期区间最大范围" :value="value[10]"/>
+        </a-cell-group>
+      </view>
+
+    </scroll-view>
+
+
+    <a-calendar style="height: 500px;" $show="show[0]" @confirm="myConfirm" @close="myClose"/>
+
+    <a-calendar style="height: 500px;" $show="show[1]" $default-date="value[1]"/>
+
+
+    <a-calendar style="height: 500px;" $show="show[2]" @confirm="myConfirm2" type="multiple"/>
+
+    <a-calendar style="height: 500px;" $show="show[3]" @confirm="myConfirm3" type="range"/>
+
+    <a-calendar style="height: 500px;" $show="show[4]" :show-confirm="false" $default-date="value[4]"/>
+    <a-calendar style="height: 500px;" $show="show[5]" :show-confirm="false" type="range" @confirm="myConfirm5"/>
+
+
+    <a-calendar style="height: 500px;" $show="show[7]" $default-date="value[7]"
+                :min-date="new Date('2009/12/15')"
+                :max-date="new Date('2010/3/9')"/>
+
+
+    <a-calendar style="height: 500px;" $show="show[8]" type="range" $default-date="value[8]" confirm-text="完成"
+                confirm-disabled-text="请选择结束时间"/>
+
+
+    <a-calendar style="height: 500px;" $show="show[9]" :formatter="this.formatter"
+                type="range" @confirm="myConfirm9"
+                :min-date="new Date('2021/5/1')"
+                :max-date="new Date('2021/6/25')"
+    />
+
+
+    <a-calendar style="height: 500px;" $show="show[10]" @confirm="myConfirm10" type="range"
+                :max-range="5"
+    />
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import ACellGroup from "../../components/act/a-cell-group";
+import ACell from "../../components/act/a-cell";
+import ACalendar from "../../components/act/a-calendar";
+import APopup from "../../components/act/a-popup";
+import {Toast} from "../../components/act";
+
+export default {
+  name: "simple-calendar",
+  components: {APopup, ACalendar, ACell, ACellGroup, ANavBar},
+  data() {
+    return {
+      value: Array.from({length: 11}).fill(''),
+      show: Array.from({length: 11}).fill(false),
+      show1: true
+    }
+  },
+  methods: {
+    choose(index) {
+      this.data.show[index] = true;
+    },
+    myConfirm({detail}) {
+      this.data.value[0] = detail;
+      Toast(`onConfirm: ${detail}`)
+    },
+    myConfirm2({detail}) {
+      this.data.value[2] = `选择了${detail.length}个日期`;
+      Toast(`onConfirm: 选择了${detail.length}个日期`)
+    },
+    myConfirm3({detail}) {
+      this.data.value[3] = `${detail[0]} - ${detail[1]}`;
+      Toast(`onConfirm: ${detail[0]} - ${detail[1]}`)
+    },
+    myConfirm5({detail}) {
+      this.data.value[5] = `${detail[0]} - ${detail[1]}`;
+      Toast(`onConfirm: ${detail[0]} - ${detail[1]}`)
+    },
+    myConfirm9({detail}) {
+      this.data.value[9] = `${detail[0]} - ${detail[1]}`;
+      Toast(`onConfirm: ${detail[0]} - ${detail[1]}`)
+    },
+    myConfirm10({detail}) {
+      this.data.value[10] = `${detail[0]} - ${detail[1]}`;
+      Toast(`onConfirm: ${detail[0]} - ${detail[1]}`)
+    },
+    formatter(day) {
+      const month = day.date.getMonth() + 1;
+      const date = day.date.getDate();
+
+      if (month === 5) {
+        if (date === 1) {
+          day.topInfo = '劳动节';
+        } else if (date === 4) {
+          day.topInfo = '青年节';
+        } else if (date === 11) {
+          day.text = '今天';
+        }
+      }
+
+
+      if (day.type === 'start') {
+        day.bottomInfo = '入住';
+      } else if (day.type === 'end') {
+        day.bottomInfo = '离店';
+      }
+
+      return day;
+    },
+    myClose(e) {
+      console.log('myClose', JSON.stringify(e))
+    }
+  }
+
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+.demo-calendar {
+  margin: 12px 12px 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.todo {
+  background: #f1e9d5;
+}
+
+
+</style>

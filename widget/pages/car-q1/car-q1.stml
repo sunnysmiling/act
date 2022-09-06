@@ -1,0 +1,16 @@
+<template>
+	<view>
+		<a-search />
+	</view>
+</template>
+<script>
+import '../../components/act/a-search/'
+export default {
+	name: 'car-q1',
+}
+</script>
+<style>
+.c {
+	background-color: green;
+}
+</style>

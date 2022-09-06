@@ -1,0 +1,66 @@
+<template>
+  {
+    this.props.content ? 
+    <view class={boxClass} style={this.props.style || ''}>
+      <view class={this.lineClass('left')} style={lineStyle}></view>
+      <text class="a-divider_text" style={textStyle}>{this.props.content}</text>
+      <view class={this.lineClass('right')} style={lineStyle}></view>
+    </view>
+    :
+    <view class={boxClass} style={this.props.style || ''}>
+      <view class={this.lineClass('center')} style={lineStyle}></view>
+    </view>
+  }
+</template>
+
+<script>
+export default {
+  name: "a-divider",
+  computed: {
+    boxClass(){
+      return `a-divider ${this.props.class||''}`;
+    },
+    lineStyle(){
+      return this.props['line-color']?`border-top-color:${this.props['line-color']};`:'';
+    },
+    textStyle(){
+      return this.props.color?`color:${this.props.color};`:'';
+    }
+  },
+  methods:{
+    lineClass(position) {
+      let width = this.props['content-position']==position?'a-divider_line-width':'a-divider_line-flex';
+      let style = this.props.dashed ? 'a-divider_line-dashed' : 'a-divider_line-solid';
+      return `a-divider_line ${width} ${style}`;
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-divider {
+  flex-direction: row;
+  align-items: center;
+}
+.a-divider_line {
+  border-top-width: 1px;
+  border-top-color: #ebedf0;
+}
+.a-divider_line-solid {
+  border-top-style: solid;
+}
+.a-divider_line-dashed {
+  border-top-style: dashed;
+}
+.a-divider_line-width {
+  width: 10%;
+}
+.a-divider_line-flex {
+  flex: 1;
+}
+.a-divider_text {
+  font-size: 14px;
+  color: #969799;
+  padding: 0 16px;
+}
+</style>

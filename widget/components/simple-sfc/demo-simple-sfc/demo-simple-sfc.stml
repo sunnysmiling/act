@@ -1,0 +1,16 @@
+<template>
+  <simple-sfc attr="abc"/>
+</template>
+
+<script>
+import SimpleSfc from "../../components/simple-sfc/simple-sfc.stml";
+
+export default {
+  name: "demo-simple-sfc",
+  components: {SimpleSfc}
+}
+</script>
+
+<style scoped>
+
+</style>

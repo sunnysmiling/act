@@ -1,0 +1,122 @@
+<template name="simple-search">
+  <view class="page">
+    <a-nav-bar title="simple-search" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+
+        <a-search $value="value1" :placeholder="placeholder" />
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">事件监听</text>
+
+        <form action="/">
+          <a-search
+            $value="value2"
+            :placeholder="placeholder"
+            show-action
+            @search="onSearch"
+            @cancel="onCancel"
+          />
+        </form>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">搜索框内容对齐</text>
+
+        <a-search $value="value3" :placeholder="placeholder" input-align="center" />
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">禁用搜索框</text>
+
+        <a-search $value="value4" :placeholder="placeholder" disabled />
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">自定义背景</text>
+        
+        <a-search
+          $value="value5"
+          :placeholder="placeholder"
+          shape="round"
+          background="#4fc08d"
+        />
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">自定义按钮</text>
+        
+        <a-search
+          $value="value6"
+          show-action
+          label="地址"
+          :placeholder="placeholder"
+          @search="onSearch"
+        >
+          <template _slot='action'>
+            <text @click="onSearch">搜索</text>
+          </template>
+        </a-search>
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import "../../components/act/a-nav-bar";
+import "../../components/act/a-search";
+
+export default {
+  name: "simple-search",
+  data() {
+    return {
+      placeholder: "请输入搜索关键词",
+      value1: '',
+      value2: '',
+      value3: '',
+      value4: '',
+      value5: '',
+      value6: ''
+    }
+  },
+  methods: {
+    onSearch(e) {
+      api.toast({
+        msg: e.detail.value
+      });
+    },
+    onCancel(e) {
+      api.toast({
+        msg: '取消'
+      });
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+</style>

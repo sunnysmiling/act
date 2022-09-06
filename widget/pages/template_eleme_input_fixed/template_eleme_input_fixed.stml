@@ -1,0 +1,372 @@
+<!-- https://community.apicloud.com/bbs/thread-170620-1-1.html -->
+
+<template name="ele-me-input-fixed">
+  <view class="page">
+    <scroll-view style="flex: 1;" scroll-y @scroll="handleScroll" bounces="false">
+      <safe-area class="header">
+        <text class="address"> 📍 选择地址</text>
+      </safe-area>
+      <view class="my-input real">
+        <text class="input-text"> 🔍 搜索吃了么商家</text>
+      </view>
+
+      <view class="main">
+        <view class="menu">
+          <view class="menu-item" v-for="m in menu">
+            <img class="menu-item__img" :src="m.img" alt=""/>
+            <text class="menu-item__text">{{ m.title }}</text>
+          </view>
+        </view>
+
+
+        <view class="banner">
+          <view class="banner__left">
+            <text class="banner__title">品质套餐</text>
+            <text class="banner__desc">搭配齐全吃得好</text>
+            <text class="banner__link">立即抢购 &gt;</text>
+          </view>
+
+          <img
+              src="https://cube.elemecdn.com/e/ee/df43e7e53f6e1346c3fda0609f1d3png.png?x-oss-process=image/format,webp/resize,w_282,h_188,m_fixed"
+              alt="" class="banner-img">
+
+        </view>
+
+
+        <view class="vip">
+
+          <img class="vip-hat"
+               src="https://cube.elemecdn.com/8/0e/4dd212d831becab6e3ebd484c0941jpeg.jpeg?x-oss-process=image/format,webp/resize,w_34"
+               alt="">
+
+          <text style="font-size: 16px;color: #644f1b;font-weight: bold;">超级会员</text>
+          <text style="font-size: 9px;flex: 1;">· 已经为我节省275元</text>
+          <text style="font-size: 9px;">下单即可获得奖金 &gt;</text>
+        </view>
+
+
+        <view class="shop-list">
+          <view class="shop" v-for="(shop,i) in shopList">
+            <view class="shop-main">
+              <img src="https://www.apicloud.com/icon/91/d1/91d1cae110eb88a6789da0d63b418f5c.png" alt=""
+                   class="shop-cover">
+              <view class="shop-info ">
+                <view class="shop-header">
+                  <text class="shop-brand">品牌</text>
+                  <text class="shop-title">{{ i ? '超级麻辣烫' : '青椒牛肉米线盖饭面皮子酸稀饭' }}</text>
+                  <text>...</text>
+                </view>
+                <text class="shop-text">{{ `评分4.${i} | 月售1${shop}` }}</text>
+                <view class="shop-footer">
+                  <text class="shop-text" style="flex: 1;">{{ `${shop}元起送 | 免配送费` }}</text>
+                  <text class="shop-text">{{ `1${shop}m | ${shop}` }}分钟</text>
+                </view>
+              </view>
+            </view>
+
+
+            <view class="shop-extra">
+              <view style="flex-flow: row nowrap;">
+                <a-tag plain style="margin-right: 5px;">盖浇饭</a-tag>
+                <a-tag plain type="primary">新店开业</a-tag>
+              </view>
+            </view>
+          </view>
+
+        </view>
+
+      </view>
+
+      <a-empty description="没有更多了"/>
+
+    </scroll-view>
+    {
+    api.systemType==='ios'?
+    (this.data.showFix&&
+    <view class="my-input fixed">
+      <view :style="`height: ${fixedStyle.top}px;`"></view>
+      <text class="input-text"> 🔍 搜索吃了么商家 fixed ios</text>
+    </view>
+    )
+    :
+    <view class="my-input fixed" :style="showFix?'display:flex;':'display:none;'">
+      <view :style="`height: ${fixedStyle.top}px;`"></view>
+      <text class="input-text"> 🔍 搜索吃了么商家 fixed 安卓</text>
+    </view>
+    }
+
+
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import ATag from "../../components/act/a-tag";
+import AEmpty from "../../components/act/a-empty";
+
+export default {
+  name: "ele-me-input-fixed",
+  installed() {
+    api.setStatusBarStyle && api.setStatusBarStyle({
+      style: 'light',
+      color: '#1989fa'
+    });
+
+  },
+  data() {
+    return {
+      showFix: false,
+      fixedStyle: {
+        top: (api.safeArea ? api.safeArea.top : 0)
+      },
+      menu: [
+        {
+          img: 'https://cube.elemecdn.com/7/d8/a867c870b22bc74c87c348b75528djpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '美食'
+        },
+
+        {
+          img: 'https://cube.elemecdn.com/a/7b/b02bd836411c016935d258b300cfejpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '大牌会吃'
+        }
+        ,
+        {
+          img: 'https://cube.elemecdn.com/e/58/bceb19258e3264e64fb856722c3c1jpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '跑腿'
+        },
+        {
+          img: 'https://cube.elemecdn.com/b/7f/432619fb21a40b05cd25d11eca02djpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '汉堡披萨'
+        },
+        {
+          img: 'https://cube.elemecdn.com/7/d6/6f2631288a44ec177204e05cbcb93jpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '地方小吃'
+        },
+        {
+          img: 'https://cube.elemecdn.com/e/89/185f7259ebda19e16123884a60ef2jpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '米粉面馆'
+        },
+        {
+          img: 'https://cube.elemecdn.com/5/1a/dc885d2ce022d2ee60495acafb795jpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '包子粥店'
+        },
+        {
+          img: 'https://cube.elemecdn.com/a/78/0fb469b2da210827ec16896e00420jpeg.jpeg?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed',
+          title: '炸鸡烤串'
+        }
+      ],
+      shopList: Array.from({length: 2}, _ => Math.random().toFixed(2) * 100 + 2)
+    }
+  },
+  methods: {
+    handleScroll({detail: {scrollTop}}) {
+      const showFix = scrollTop > 44;
+      if (showFix !== this.data.showFix) {
+        console.log(`this.data.showFix = ${showFix}`)
+        this.data.showFix = showFix;
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+
+.page {
+  flex: 1;
+  background-color: #FFF;
+  position: relative;
+}
+
+.header {
+  background: #1989fa;
+}
+
+.address {
+  color: #fff;
+  height: 44px;
+  line-height: 44px;
+  margin: 0 16px;
+}
+
+.my-input {
+
+  background: #1989fa;
+  width: 100%;
+}
+
+.input-text {
+  color: #666;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  background: #ddd;
+  margin: 16px;
+  border-radius: 3px;
+}
+
+.fixed {
+  position: absolute;
+  margin: 0 auto;
+}
+
+.menu {
+  flex-flow: row wrap;
+}
+
+.menu-item {
+  width: 20%;
+  align-items: center;
+}
+
+.menu-item__img {
+  width: 44px;
+  height: 44px;
+}
+
+.menu-item__text, .banner__desc {
+  color: #666;
+  font-size: 12px;
+}
+
+
+.banner {
+  flex-flow: row nowrap;
+  background-color: #f7f7f7;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+
+.banner__left {
+  flex: 1;
+}
+
+.banner__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+
+.banner__link {
+  color: #af8260;
+  font-weight: bolder;
+  margin-top: 10px;
+}
+
+.banner-img {
+  width: 120px;
+  height: 80px;
+}
+
+
+.vip {
+  background-image: linear-gradient(to right, #ffefc4, #f3dda0);
+  margin: 10px;
+  padding: 10px;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.vip-hat {
+  width: 15px;
+  height: 15px;
+}
+
+.shop {
+  margin: 10px;
+}
+
+.shop-main {
+  flex-flow: row nowrap;
+}
+
+.shop-info {
+  margin-left: 10px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.shop-header {
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.shop-brand {
+  background-color: #ffe339;
+  color: #6f3f15;
+  font-size: 12px;
+  font-weight: bold;
+  height: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 3px;
+  margin-right: 4px;
+}
+
+.shop-cover {
+  width: 55px;
+  height: 55px;
+}
+
+.shop-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #323233;
+  flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.shop-text {
+  font-size: 9px;
+  color: #999;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.shop-footer {
+  flex-flow: row nowrap;
+}
+
+.shop-extra {
+  padding-top: 5px;
+  padding-left: 65px;
+}
+
+
+.shop-act-mark {
+  display: inline-flex;
+  font-size: 12px;
+  color: #fff;
+  height: 14px;
+  width: 14px;
+  text-align: center;
+  line-height: 14px;
+  border-radius: 3px;
+}
+
+
+.bg1 {
+  background-color: #1989fa;
+}
+
+.bg2 {
+  background-color: #07c160;
+}
+
+.shop-act-text {
+  color: #666;
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>

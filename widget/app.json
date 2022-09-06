@@ -1,0 +1,44 @@
+{
+  "name": "root",
+  "tabBar": {
+    "frames": [
+      {
+        "title": "组件",
+        "name": "main",
+        "url": "./pages/main/main.stml"
+      },
+      {
+        "title": "拓展",
+        "name": "extend",
+        "url": "./pages/extend/extend.stml"
+      },
+      {
+        "title": "模板",
+        "name": "template",
+        "url": "./pages/template/template.stml"
+      }
+    ],
+    "list": [
+      {
+        "text": "组件",
+        "iconPath": "./image/icon__tab--component-0.png",
+        "selectedIconPath": "./image/icon__tab--component-1.png"
+      },
+      {
+        "text": "拓展",
+        "iconPath": "./image/icon__tab--extend-0.png",
+        "selectedIconPath": "./image/icon__tab--extend-1.png"
+      },
+      {
+        "text": "模板",
+        "iconPath": "./image/icon__tab--template-0.png",
+        "selectedIconPath": "./image/icon__tab--template-1.png"
+      }
+    ],
+    "color": "#666",
+    "selectedColor": "#3a6",
+    "animated": false,
+    "scrollEnabled": false,
+    "preload": 2
+  }
+}

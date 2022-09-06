@@ -1,0 +1,160 @@
+<template>
+  <view class="page">
+    <a-nav-bar title="simple-iconfont" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="todo">
+        <text class="simple-title">说明</text>
+        <text class="simple-desc ">本组件和 a-icon 的不同之处在于是使用了iconfont字体图标构建。
+        </text>
+      </view>
+      <view class="simple">
+        <text class="simple-title">基本用法</text>
+
+
+        <view class="row">
+          <a-iconfont name="mine"/>
+
+          <text class="simple-desc">
+            name 属性支持传入图标名称。
+          </text>
+        </view>
+
+
+        <view class="row">
+          <a-iconfont>mine</a-iconfont>
+
+          <text class="simple-desc">
+            还可以将图标名称作为子节点。
+          </text>
+        </view>
+
+
+        <view class="row">
+          <a-iconfont>&#xe70e;</a-iconfont>
+
+          <text class="simple-desc">
+            也支持图标Unicode实体子节点。
+          </text>
+        </view>
+
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">图标大小</text>
+        <text class="simple-desc">
+          Icon 的 size 属性用来设置图标的尺寸大小，默认是16,单位 px。
+        </text>
+
+        <view class="row">
+          <a-iconfont name="file" size="32"/>
+          <a-iconfont name="user" size="66"/>
+        </view>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">图标颜色</text>
+        <text class="simple-desc">
+          Icon 的 color 属性用来设置图标的颜色。
+        </text>
+
+        <view class="row">
+          <a-iconfont name="file-fill" size="32" color="red"/>
+          <a-iconfont name="people_fill" size="32" color="#3af"/>
+          <a-iconfont name="book" size="32" color="rgb(123,213,21)"/>
+        </view>
+      </view>
+      <view class="simple">
+        <text class="simple-title">所有图标</text>
+        <text class="simple-desc">
+          以下显示当前字体包内所有图标。
+        </text>
+        <view class="row">
+          <view class="icon-item" v-for="[icon,name] in icons">
+            <a-iconfont :name="icon" size="32"/>
+            <text class="icon-item-text">{{ icon }}</text>
+          </view>
+        </view>
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import AIconfont from "../../components/act/a-iconfont";
+import icons from '../../components/act/a-iconfont/dist/icons.json';
+
+export default {
+  name: "simple-iconfont",
+  components: {AIconfont, ANavBar},
+  data() {
+    return {
+      icons: []
+    }
+  },
+  installed() {
+    this.getIcon()
+  },
+  methods: {
+
+    getIcon() {
+      this.data.icons = Object.entries(icons);
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.todo {
+  background: #f1e9d5;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+.row {
+  flex-flow: row wrap;
+  padding: 16px;
+}
+
+
+.icon-item {
+  width: 25%;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.icon-item-text {
+  color: #999;
+  font-size: 11px;
+  height: 32px;
+  text-align: center;
+}
+
+.color-item {
+  margin: 5px;
+  font-size: 11px;
+}
+</style>

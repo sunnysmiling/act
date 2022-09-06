@@ -1,0 +1,116 @@
+<script>
+
+import {mixedClass} from "../utils";
+import AIcon from "../a-icon";
+
+export default {
+  name: "a-tag",
+  install() {
+    this.render = props => {
+      if (typeof props.show !== 'undefined' && props.show === false) return false;
+
+      const {h} = apivm;
+
+      const attr = {
+        ...props,
+        class: mixedClass(`a-tag a-tag--${props.type || 'default'} ${props.class || ''}`, {
+          [`a-tag--plain a-tag--plain---a-tag--${props.type}`]: props.plain,
+          'a-tag--round': props.round,
+          'a-tag--mark': props.mark,
+        }),
+        style: `${props.style || ''}`,
+      };
+
+      if (props.closeable) {
+        attr.onClick = _ => this.onClose(_)
+
+        return h('view', attr, h('text', attr, props.children),
+            h(AIcon, {
+              name: 'close',
+              size: 12,
+              color: '#FFF'
+            }));
+      } else {
+
+        return h('text', attr, props.children);
+      }
+
+    }
+  },
+  onClose(_) {
+    this.fire('close');
+  }
+}
+</script>
+
+<style scoped>
+.a-tag {
+  align-items: center;
+  padding: 0 4px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 2px;
+  flex-flow: row nowrap;
+}
+
+.a-tag--primary {
+  color: #fff;
+  background-color: #1989fa;
+  border: 1px solid #1989fa;
+}
+
+.a-tag--success {
+  color: #fff;
+  background-color: #07c160;
+  border: 1px solid #07c160;
+}
+
+.a-tag--default {
+  color: #969799;
+  background-color: #ebedf0;
+  border: 1px solid #ebedf0;
+}
+
+.a-tag--danger {
+  color: #fff;
+  background-color: #ee0a24;
+  border: 1px solid #ee0a24;
+}
+
+.a-tag--warning {
+  color: #fff;
+  background-color: #ff976a;
+  border: 1px solid #ff976a;
+}
+
+
+.a-tag--plain {
+  background-color: #fff;
+}
+
+.a-tag--plain---a-tag--primary {
+  color: #1989fa;
+}
+
+.a-tag--plain---a-tag--success {
+  color: #07c160;
+}
+
+
+.a-tag--plain---a-tag--danger {
+  color: #ee0a24;
+}
+
+.a-tag--plain---a-tag--warning {
+  color: #ff976a;
+}
+
+.a-tag--round {
+  border-radius: 8px;
+}
+
+.a-tag--mark {
+  border-radius: 0 8px 8px 0;
+}
+</style>

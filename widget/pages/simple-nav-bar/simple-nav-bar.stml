@@ -1,0 +1,103 @@
+<template name="simple-nav-bar">
+  <view class="page">
+    <a-nav-bar title="simple-nav-bar" left-arrow/>
+    <scroll-view style="flex: 1;">
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+        <a-nav-bar
+            title="标题"
+            left-text="返回"
+            right-text="按钮"
+            left-arrow
+            @click-left="onClickLeft"
+            @click-right="onClickRight"
+            title-size="18"
+            title-color="red"
+            height="44"
+        />
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">不要底边线</text>
+        <text class="simple-desc">通过添加 hide-line 属性设置隐藏底边线。</text>
+        <a-nav-bar hide-line title="没有底边线"/>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">使用插槽</text>
+        <a-nav-bar title="标题" left-text="返回" left-arrow>
+          <template _slot="right" class="demo-right">
+            <a-icon name="search" color="blue" size="18"/>
+            <text style="color:green">文本</text>
+          </template>
+        </a-nav-bar>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">单图标居中测试</text>
+        <a-nav-bar title="只有左边" left-text="返回" left-arrow/>
+
+        <text class="simple-title">单图标居中测试</text>
+        <a-nav-bar title="只有右边">
+          <template _slot="right" class="demo-right">
+            <a-icon name="search" size="18"/>
+            <text>文本</text>
+          </template>
+        </a-nav-bar>
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import {Toast} from "../../components/act";
+import AIcon from "../../components/act/a-icon";
+
+export default {
+  name: "simple-nav-bar",
+  components: {AIcon, ANavBar},
+  methods: {
+    onClickLeft() {
+      Toast('返回2');
+    },
+    onClickRight() {
+      Toast('右侧');
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  margin-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+.demo-right {
+  flex-flow: row nowrap;
+  align-items: center;
+}
+</style>

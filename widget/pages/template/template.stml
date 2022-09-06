@@ -1,0 +1,38 @@
+<template name="template">
+  <view class="page">
+    <a-nav-bar title="业务模板"/>
+    <scroll-view style="flex: 1;">
+
+      <a-cell-group round>
+        <a-cell is-link to="template_eleme_input_fixed" title="仿饿了么头部固定"/>
+      </a-cell-group>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+
+import ANavBar from "../../components/act/a-nav-bar";
+import ACellGroup from "../../components/act/a-cell-group";
+import ACell from "../../components/act/a-cell";
+
+export default {
+  name: "template",
+  components: {ACell, ACellGroup, ANavBar},
+  methods: {},
+  onshow() {
+    api.setStatusBarStyle && api.setStatusBarStyle({
+      style: 'dark',
+      color: '-'
+    });
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  background-color: #F8F8F8;
+}
+</style>

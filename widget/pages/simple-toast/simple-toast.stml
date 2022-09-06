@@ -1,0 +1,95 @@
+<template name="simple-toast">
+  <view class="page">
+    <a-nav-bar title="simple-toast" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="simple">
+        <text class="simple-title">
+          基本用法
+        </text>
+        <a-cell-group round>
+          <a-cell is-link @click="demo('文字提示')">文字提示</a-cell>
+          <a-cell is-link @click="demo('加载提示')">加载提示</a-cell>
+        </a-cell-group>
+      </view>
+      <view class="simple">
+        <text class="simple-title">
+          自定义位置
+        </text>
+
+        <text class="simple-desc">
+          Toast 默认渲染在屏幕正中位置，通过 position 属性可以控制 Toast 展示的位置。
+        </text>
+
+        <a-cell-group round>
+          <a-cell is-link @click="demo('顶部展示')">顶部展示</a-cell>
+          <a-cell is-link @click="demo('底部展示')">底部展示</a-cell>
+        </a-cell-group>
+      </view>
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import ACellGroup from "../../components/act/a-cell-group";
+import ACell from "../../components/act/a-cell";
+import {Toast} from "../../components/act";
+
+export default {
+  name: "simple-toast",
+  components: {ACell, ACellGroup, ANavBar},
+  methods: {
+    demo(type) {
+      if (type === '文字提示') {
+        Toast('提示内容');
+      } else if (type === '加载提示') {
+        Toast.loading({
+          message: '自动加载中...',
+          forbidClick: true,
+        });
+
+        setTimeout(_ => {
+          Toast.clear();
+        }, 2000)
+
+      } else if (type === '顶部展示') {
+        Toast('提示内容', 'top');
+      } else if (type === '底部展示') {
+        Toast({
+          message: '底部展示',
+          position: 'bottom',
+        });
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+
+</style>

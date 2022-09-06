@@ -1,0 +1,179 @@
+<template name="simple-badge">
+  <view class="page">
+    <a-nav-bar title="simple-badge" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+        <text class="simple-desc">
+          设置 content 属性后，Badge 会在子元素的右上角显示对应的徽标，也可以通过 dot 来显示小红点。
+        </text>
+        <a-row justify="space-around">
+          <a-badge :content="5">
+            <div class="child"/>
+          </a-badge>
+          <a-badge :content="10">
+            <div class="child"/>
+          </a-badge>
+          <a-badge content="Hot">
+            <div class="child"/>
+          </a-badge>
+          <a-badge dot>
+            <div class="child"/>
+          </a-badge>
+        </a-row>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">最大值</text>
+        <text class="simple-desc">
+          设置 max 属性后，当 content 的数值超过最大值时，会自动显示为 max+。
+        </text>
+        <a-row justify="space-around">
+          <a-badge :content="20" max="9">
+            <div class="child"/>
+          </a-badge>
+          <a-badge :content="50" max="20">
+            <div class="child"/>
+          </a-badge>
+          <a-badge :content="200" max="99">
+            <div class="child"/>
+          </a-badge>
+        </a-row>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title">自定义颜色</text>
+        <text class="simple-desc">
+          通过 color 属性来设置徽标的颜色。
+        </text>
+        <a-row justify="space-around">
+          <a-badge :content="5" color="#1989fa">
+            <div class="child"/>
+          </a-badge>
+          <a-badge :content="10" color="#1989fa">
+            <div class="child"/>
+          </a-badge>
+          <a-badge dot color="#1989fa">
+            <div class="child"/>
+          </a-badge>
+        </a-row>
+      </view>
+
+
+      <!--      <view class="simple">-->
+      <!--        <text class="simple-title">自定义徽标内容</text>-->
+      <!--        <text class="simple-desc">-->
+      <!--          通过 content 插槽可以自定义徽标的内容，比如插入一个图标。-->
+      <!--        </text>-->
+      <!--        <a-row justify="space-around">-->
+
+      <!--          <a-badge>-->
+      <!--            <div class="child"/>-->
+      <!--            <template _slot="content">-->
+      <!--              <a-icon name="success" class="badge-icon" size="12" color="#FFF"/>-->
+      <!--            </template>-->
+      <!--          </a-badge>-->
+      <!--          <a-badge>-->
+      <!--            <div class="child"/>-->
+      <!--            <template _slot="content">-->
+      <!--              <a-icon name="close" class="badge-icon" size="12" color="#FFF"/>-->
+      <!--            </template>-->
+      <!--          </a-badge>-->
+      <!--          <a-badge>-->
+      <!--            <div class="child"/>-->
+      <!--            <template _slot="content">-->
+      <!--              <a-icon name="refresh" class="badge-icon" size="12" color="#FFF"/>-->
+      <!--            </template>-->
+      <!--          </a-badge>-->
+
+      <!--        </a-row>-->
+      <!--      </view>-->
+
+      <view class="simple">
+        <text class="simple-title">独立展示</text>
+        <text class="simple-desc">
+          当 Badge 没有子元素时，会作为一个独立的元素进行展示。
+        </text>
+        <a-row justify="space-around">
+          <a-badge :content="20"/>
+
+          <a-badge :content="200" max="99"/>
+        </a-row>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">自定义偏移位置</text>
+        <text class="simple-desc">
+          通过 offset 属性来自定义偏移位置。
+        </text>
+        <a-row justify="space-around">
+          <a-badge :content="5" offsetX="0" offsetY="0">
+            <div class="child"/>
+          </a-badge>
+          <a-badge :content="10" :offsetX="-10" :offsetY="-15">
+            <div class="child"/>
+          </a-badge>
+          <a-badge dot :offsetX="-20" :offsetY="-20">
+            <div class="child"/>
+          </a-badge>
+        </a-row>
+      </view>
+
+
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import ANavBar from "../../components/act/a-nav-bar";
+import ABadge from "../../components/act/a-badge";
+import ARow from "../../components/act/a-row";
+import AIcon from "../../components/act/a-icon";
+
+export default {
+  name: "simple-badge",
+  components: {AIcon, ARow, ABadge, ANavBar}
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+
+
+.todo {
+  background: #f1e9d5;
+}
+
+
+.child {
+  width: 40px;
+  height: 40px;
+  background: #f2f3f5;
+  border-radius: 4px;
+}
+
+</style>

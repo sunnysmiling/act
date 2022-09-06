@@ -1,0 +1,154 @@
+<script>
+import {mixedClass, superNode} from "../utils";
+import AIcon from "../a-icon";
+
+export default {
+  name: "a-button",
+  install() {
+
+    const {h} = avm;
+
+    this.render = props => {
+      if (!props.type) props.type = 'default';
+      if (!props.size) props.size = 'normal';
+
+      if (props.icon) {
+        props.children.unshift({
+          "nodeName": AIcon,
+          "attributes": {"name": props.icon, "color": "#FFF", size: 20}
+        })
+      }
+
+      return h('button', {
+        ...props,
+        class: mixedClass(`a-button a-button--${props.type} a-button--${props.size} ${props.class || ''}`, {
+          [`a-button--plain a-button--plain---a-button--${props.type}`]: props.plain,
+          'a-button--hairline': props.hairline,
+          'a-button--disabled': props.disabled,
+          'a-button--square': props.square,
+          'a-button--round': props.round
+        }),
+      }, props.text, props.children);
+
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-button {
+  padding: 0;
+  box-sizing: border-box;
+  height: 44px;
+  line-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 2px;
+  cursor: pointer;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+  -webkit-appearance: none;
+}
+
+.a-button::after {
+  border: none;
+}
+
+.a-button--primary {
+  color: #fff;
+  background-color: #1989fa;
+  border: 1px solid #1989fa;
+}
+
+.a-button--success {
+  color: #fff;
+  background-color: #07c160;
+  border: 1px solid #07c160;
+}
+
+.a-button--default {
+  color: #323233;
+  background-color: #fff;
+  border: 1px solid #ebedf0;
+}
+
+.a-button--danger {
+  color: #fff;
+  background-color: #ee0a24;
+  border: 1px solid #ee0a24;
+}
+
+.a-button--warning {
+  color: #fff;
+  background-color: #ff976a;
+  border: 1px solid #ff976a;
+}
+
+
+.a-button--plain {
+  background-color: #fff;
+}
+
+.a-button--plain---a-button--primary {
+  color: #1989fa;
+}
+
+.a-button--plain---a-button--success {
+  color: #07c160;
+}
+
+
+.a-button--plain---a-button--danger {
+  color: #ee0a24;
+}
+
+.a-button--plain---a-button--warning {
+  color: #ff976a;
+}
+
+.a-button--hairline {
+  border-width: 0.5px;
+}
+
+.a-button--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  color: #fff;
+}
+
+.a-button--round {
+  border-radius: 999px;
+}
+
+.a-button--square {
+  border-radius: 0;
+}
+
+.a-button--large {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+}
+
+.a-button--normal {
+  padding: 0 15px;
+  font-size: 14px;
+}
+
+.a-button--small {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.a-button--mini {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 4px;
+  font-size: 10px;
+}
+</style>

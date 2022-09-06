@@ -1,0 +1,7 @@
+<widget id="A6185946064539" version="0.0.1">
+    <name>ACT</name>
+    <preference name="windowBackground" value="#fff"/>
+    <content src="app.json"/>
+    <preference name="font" family="iconfont" value="widget/components/act/a-iconfont/fonts/iconfont.ttf"/>
+    <preference name="android_abi" value="arm64-v8a"/>
+</widget>

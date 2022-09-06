@@ -1,0 +1,162 @@
+<template name="simple-button">
+  <view class="page">
+    <a-nav-bar title="button" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+      <view class="simple">
+        <text class="simple-title" @click="test">按钮类型</text>
+        <text class="simple-desc">按钮支持 default、primary、success、warning、danger 五种类型，默认为
+          default。
+        </text>
+
+        <view style="flex-direction: row;padding: 16px;">
+          <a-button type="primary" class="demo">主要按钮</a-button>
+          <a-button type="success" class="demo">成功按钮</a-button>
+          <a-button class="demo">默认按钮</a-button>
+        </view>
+        <view class="row">
+          <a-button type="warning" class="demo">警告按钮</a-button>
+          <a-button type="danger" class="demo">危险按钮</a-button>
+        </view>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title" @click="test">朴素按钮</text>
+        <text class="simple-desc">
+          通过 plain 属性将按钮设置为朴素按钮，朴素按钮的文字为按钮颜色，背景为白色。
+        </text>
+
+        <view style="flex-direction: row;padding: 16px;">
+          <a-button plain type="primary" class="demo">主要按钮</a-button>
+          <a-button plain type="success" class="demo">成功按钮</a-button>
+        </view>
+        <view class="row">
+          <a-button plain type="warning" class="demo">警告按钮</a-button>
+          <a-button plain type="danger" class="demo">危险按钮</a-button>
+        </view>
+
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title" @click="test">细边框</text>
+        <text class="simple-desc">
+          设置 hairline 属性可以展示 0.5px 的细边框。
+        </text>
+
+        <view style="flex-direction: row;padding: 16px;">
+          <a-button plain hairline type="primary" class="demo">主要按钮</a-button>
+          <a-button plain hairline type="success" class="demo">成功按钮</a-button>
+        </view>
+      </view>
+
+
+      <view class="simple">
+        <text class="simple-title" @click="test">禁用状态</text>
+        <text class="simple-desc">
+          通过 disabled 属性来禁用按钮，禁用状态下按钮不可点击。
+        </text>
+
+        <view style="flex-direction: row;padding: 16px;">
+          <a-button disabled type="primary" class="demo">主要按钮</a-button>
+          <a-button disabled type="success" class="demo">成功按钮</a-button>
+        </view>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title" @click="test">按钮形状</text>
+        <text class="simple-desc">
+          通过 square 设置方形按钮，通过 round 设置圆形按钮。
+        </text>
+
+        <view style="flex-direction: row;padding: 16px;">
+          <a-button square type="primary" class="demo">主要按钮</a-button>
+          <a-button round type="success" class="demo">成功按钮</a-button>
+        </view>
+      </view>
+      <view class="simple">
+        <text class="simple-title" @click="test">按钮图标</text>
+        <text class="simple-desc">
+          通过 icon 属性设置按钮图标，支持 Icon 组件里的所有图标，也可以传入图标 URL。
+        </text>
+
+        <view style="flex-direction: row;padding: 16px;">
+          <a-button icon="search" type="primary" class="demo"/>
+          <a-button icon="add" type="success" class="demo"/>
+          <a-button plain icon="https://img.yzcdn.cn/vant/user-active.png" type="primary" class="demo"/>
+        </view>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title" @click="test">按钮尺寸</text>
+        <text class="simple-desc">
+          支持 large、normal、small、mini 四种尺寸，默认为 normal。
+        </text>
+
+        <view style="flex-direction: row;flex-wrap:wrap;padding: 16px;">
+          <a-button type="primary" size="large" class="demo">大号按钮</a-button>
+          <a-button type="primary" size="normal" class="demo">普通按钮</a-button>
+          <a-button type="primary" size="small" class="demo">小型按钮</a-button>
+          <a-button type="primary" size="mini" class="demo">迷你按钮</a-button>
+
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import "../../components/act/a-nav-bar";
+import "../../components/act/a-button";
+
+export default {
+  name: "simple-button",
+  data() {
+    return {
+      text: '哈哈哈 '
+    }
+  },
+  methods: {
+    test() {
+      this.data.text = '测试'
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  flex: 1;
+  background-color: #F8F8F8;
+}
+
+.row {
+  flex-flow: row wrap;
+  padding: 16px;
+}
+
+.demo {
+  margin-left: 0;
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+
+
+.simple {
+  margin-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+</style>

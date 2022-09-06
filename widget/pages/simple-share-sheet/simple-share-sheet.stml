@@ -1,0 +1,192 @@
+<template name="simple-share-sheet">
+  <view class="page">
+    <a-nav-bar title="simple-share-sheet" left-arrow/>
+    <scroll-view style="flex: 1;" scroll-y>
+
+      <view class="simple">
+        <text class="simple-title">基础用法</text>
+
+        <a-cell-group round>
+          <a-cell title="显示分享面板" is-link onclick={_=>this.data.showBasic = true}/>
+        </a-cell-group>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">展示多行选项</text>
+
+        <a-cell-group round>
+          <a-cell title="显示分享面板" is-link onclick={_=>this.data.showMultiLine = true}/>
+        </a-cell-group>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">自定义图标</text>
+
+        <a-cell-group round>
+          <a-cell title="显示分享面板" is-link onclick={_=>this.data.showCustomIcon = true}/>
+        </a-cell-group>
+      </view>
+
+      <view class="simple">
+        <text class="simple-title">展示描述信息</text>
+
+        <a-cell-group round>
+          <a-cell title="显示分享面板" is-link onclick={_=>this.data.showWithDesc = true}/>
+        </a-cell-group>
+      </view>
+
+    </scroll-view>
+    
+    <a-share-sheet
+      $show="showBasic"
+      title="立即分享给好友"
+      :options="options"
+      @select="onSelect"
+    />
+
+    <a-share-sheet
+      $show="showMultiLine"
+      title="立即分享给好友"
+      :options="multiLineOptions"
+      @select="onSelect"
+    />
+
+    <a-share-sheet
+      $show="showCustomIcon"
+      title="立即分享给好友"
+      :options="customIconOptions"
+      @select="onSelect"
+    />
+
+    <a-share-sheet
+      $show="showWithDesc"
+      title="立即分享给好友"
+      description="描述信息"
+      :options="optionsWithDesc"
+      @select="onSelect"
+    />
+  </view>
+</template>
+
+<script>
+import "../../components/act/a-nav-bar";
+import "../../components/act/a-cell-group";
+import "../../components/act/a-cell";
+import "../../components/act/a-share-sheet";
+
+export default {
+  name: "simple-share-sheet",
+  data() {
+    return {
+      showBasic: false,
+      showMultiLine: false,
+      showCustomIcon: false,
+      showWithDesc: false,
+      'zh-CN': {
+        qq: 'QQ',
+        link: '复制链接',
+        weibo: '微博',
+        wechat: '微信',
+        poster: '分享海报',
+        qrcode: '二维码',
+        weappQrcode: '小程序码',
+      }
+    }
+  },
+
+  computed: {
+    options() {
+      return [
+        { name: this.t('wechat'), icon: 'wechat' },
+        { name: this.t('weibo'), icon: 'weibo' },
+        { name: this.t('link'), icon: 'link' },
+        { name: this.t('poster'), icon: 'poster' },
+        { name: this.t('qrcode'), icon: 'qrcode' },
+      ];
+    },
+
+    multiLineOptions() {
+      return [
+        [
+          { name: this.t('wechat'), icon: 'wechat' },
+          { name: this.t('weibo'), icon: 'weibo' },
+          { name: this.t('qq'), icon: 'qq' },
+        ],
+        [
+          { name: this.t('link'), icon: 'link' },
+          { name: this.t('poster'), icon: 'poster' },
+          { name: this.t('qrcode'), icon: 'qrcode' },
+          { name: this.t('weappQrcode'), icon: 'weapp-qrcode' },
+        ],
+      ];
+    },
+
+    customIconOptions() {
+      return [
+        {
+          name: '名称',
+          icon: 'https://docs.apicloud.com/act/img/custom-icon-fire.png',
+        },
+        {
+          name: '名称',
+          icon: 'https://docs.apicloud.com/act/img/custom-icon-light.png',
+        },
+        {
+          name: '名称',
+          icon: 'https://docs.apicloud.com/act/img/custom-icon-water.png',
+        },
+      ];
+    },
+
+    optionsWithDesc() {
+      return [
+        { name: this.t('wechat'), icon: 'wechat' },
+        { name: this.t('weibo'), icon: 'weibo' },
+        {
+          name: this.t('link'),
+          icon: 'link',
+          description: '描述信息',
+        },
+        { name: this.t('poster'), icon: 'poster' },
+        { name: this.t('qrcode'), icon: 'qrcode' },
+      ];
+    },
+  },
+
+  methods: {
+    onSelect(e) {
+      api.toast({msg: e.detail.option.name});
+      this.data.showBasic = false;
+      this.data.showWithDesc = false;
+      this.data.showMultiLine = false;
+      this.data.showCustomIcon = false;
+    },
+    t(key) {
+      return this.data['zh-CN'][key];
+    }
+  }
+}
+</script>
+
+<style scoped>
+.page {
+  height: 100%;
+  background-color: #F8F8F8;
+}
+
+.simple {
+  padding-bottom: 28px;
+}
+
+.simple-title {
+  margin: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.simple-desc {
+  color: #999;
+  font-size: 14px;
+  margin: 0 16px 16px;
+}
+</style>

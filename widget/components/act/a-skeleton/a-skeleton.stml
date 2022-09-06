@@ -1,0 +1,97 @@
+<template>
+  {(this.props.loading && 
+  <view class="a-skeleton">
+    {this.props.avatar && <view class={avatarClass} style={avatarStyle}/>}
+    <view style="flex:1">
+      {this.props.title && <text class="a-skeleton_title" style={titleStyle}>{this.props.title}</text>}
+      {this.props.row && 
+      <view>
+        <view v-for="(item,index) in rows" class="a-skeleton_row" style={this.getRowStyle(index)}/>
+      </view>
+      }
+    </view>
+  </view>) || this.getChildNode()
+  }
+</template>
+
+<script>
+
+const DEFAULT_ROW_WIDTH = '100%';
+const DEFAULT_LAST_ROW_WIDTH = '60%';
+
+export default {
+  name: "a-skeleton",
+  data() {
+    return {
+    }
+  },
+  computed: {
+    rows() {
+      let row = this.props.row || 0;
+      return Array.from({length: row}).fill('');
+    },
+    avatarClass() {
+      return 'a-skeleton_avatar ' + (this.props['avatar-shape'] == 'square' ? '' : 'a-skeleton_round');
+    },
+    avatarStyle() {
+      let size = this.props['avatar-size'];
+      return size ? `width:${size};height:${size};` : '';
+    },
+    titleStyle() {
+      let titleWidth = this.props['title-width'];
+      return titleWidth ? `width:${titleWidth};` : '';
+    }
+  },
+  beforeRender() {
+    if (!('loading' in this.props)) this.props.loading = true;
+  },
+  methods:{
+    getChildNode(){
+      return this.props.children.length > 0 ? this.props.children[0] : null;
+    },
+    getRowStyle(index) {
+      return `width:${this.getRowWidth(index)};`;
+    },
+    getRowWidth(index) {
+      const rowWidth  = this.props['row-width'] || DEFAULT_ROW_WIDTH;
+
+      if (rowWidth === DEFAULT_ROW_WIDTH && index === this.props.row - 1) {
+        return DEFAULT_LAST_ROW_WIDTH;
+      }
+
+      if (Array.isArray(rowWidth)) {
+        return rowWidth[index];
+      }
+
+      return rowWidth;
+    }
+  }
+}
+</script>
+
+<style scoped>
+.a-skeleton {
+  flex-direction: row;
+}
+.a-skeleton_avatar {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-right: 16px;
+  background-color: #f2f3f5;
+}
+.a-skeleton_round {
+  border-radius: 999px;
+}
+.a-skeleton_title {
+  width: 40%;
+  height: 16px;
+  background-color: #f2f3f5;
+}
+.a-skeleton_row {
+  margin-top: 12px;
+  width: 40%;
+  height: 16px;
+  background-color: #f2f3f5;
+}
+</style>
